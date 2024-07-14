@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Update the curriculums table
-        Schema::table('curriculums', function (Blueprint $table) {
-            // Add new columns
+        // Create the curriculums table
+        Schema::create('curriculums', function (Blueprint $table) {
+            $table->id();
             $table->string('curriculum_name');
             $table->string('link')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -24,7 +25,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Drop the new columns
+        // Drop the curriculums table
         Schema::dropIfExists('curriculums');
     }
 };
