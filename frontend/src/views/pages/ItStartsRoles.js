@@ -31,7 +31,9 @@ function ItStartsRoles() {
       axios.post('/api/select-role', { role })
         .then(response => {
           const data = response.data;
-          if (data.redirect) {
+          if (data.error) {
+            console.error('Error selecting role:', data.error);
+          } else {
             navigate(data.redirect); // Redirect to the URL sent by the backend
           }
         })
