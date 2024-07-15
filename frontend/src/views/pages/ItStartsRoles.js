@@ -11,31 +11,45 @@ import {
   Row,
   Col
 } from "reactstrap";
+import SignupNavbar from "components/Navbars/SignupNavbar";
 
 function ItStartsRoles() {
   const navigate = useNavigate();
 
   // This function is to handle navigation based on role selection
   const handleRoleSelection = (role) => {
-    axios.post('/api/select-role', { role })
-      .then(response => {
-        const data = response.data;
-        if (data.error) {
-          console.error('Error selecting role:', data.error);
-        } else {
-          navigate(data.redirect); // Redirect to the URL sent by the backend
-        }
-      })
-      .catch(error => {
-        console.error('Error selecting role:', error);
-      });
+    // Handling different roles and navigating to specific routes
+    if (role === "homeschooler") {
+      navigate("/sign-up-homeschooler");
+    }
+    else if (role === "parents") {
+      navigate("/sign-up-parents");
+    }
+    else if (role === "tutor") {
+      navigate("/sign-up-tutor");
+    } else {
+      axios.post('/api/select-role', { role })
+        .then(response => {
+          const data = response.data;
+          if (data.error) {
+            console.error('Error selecting role:', data.error);
+          } else {
+            navigate(data.redirect); // Redirect to the URL sent by the backend
+          }
+        })
+        .catch(error => {
+          console.error('Error selecting role:', error);
+        });
+    }
   };
 
   return (
+    <>
+    <SignupNavbar/>
     <div
       className="section section-signup"
       style={{
-        backgroundColor: "#FFF5EE",
+        backgroundColor: "#F7F0EB",
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
@@ -44,7 +58,7 @@ function ItStartsRoles() {
     >
       <Container>
         <Row className="justify-content-center">
-          <Col md="6">
+          <Col md="12" className="d-flex justify-content-center">
             <Card className="card-signup" data-background-color="white">
               <CardHeader className="text-center">
                 <div className="logo-container mb-3">
@@ -65,6 +79,7 @@ function ItStartsRoles() {
                   className="btn-round btn-lg mb-3 btn-primary"
                   block
                   onClick={() => handleRoleSelection("homeschooler")}
+                  href=""
                 >
                   ME: The Homeschooler
                 </Button>
@@ -78,7 +93,7 @@ function ItStartsRoles() {
                 <Button
                   className="btn-round btn-lg mb-3 btn-primary"
                   block
-                  onClick={() => handleRoleSelection("tutors")}
+                  onClick={() => handleRoleSelection("tutor")}
                 >
                   Tutors
                 </Button>
@@ -91,6 +106,7 @@ function ItStartsRoles() {
         </Row>
       </Container>
     </div>
+  </>
   );
 }
 
