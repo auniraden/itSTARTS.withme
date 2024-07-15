@@ -3,28 +3,41 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Role;
+use App\Models\User;
 
 class RoleSelectionController extends Controller
 {
     public function selectRole(Request $request)
     {
-        $validatedData = $request->validate([
-            'role' => 'required|string|in:homeschooler,parents,tutors',
+        $request->validate([
+            'role' => 'required|string|in:homeschooler,parents,tutor',
         ]);
 
-        // Determine where to redirect based on selected role
-        switch ($validatedData['role']) {
+        $roleName = $request->input('role');
+
+        // Check if role exists or create a new one
+        $role = Role::firstOrCreate(['role_name' => $roleName]);
+
+        // Assuming user is authenticated and available via auth() helper
+        $user = $request->user(); // or use $request->user() if using Laravel's built-in auth
+        $user->role_id = $role->id;
+        $user->save();
+
+        $redirectRoute = '';
+
+        switch ($roleName) {
             case 'homeschooler':
-                return redirect('/sign-up-homeschooler-page');
+                $redirectRoute = '/sign-up-homeschooler';
                 break;
             case 'parents':
-                return redirect('/sign-up-parents-page');
+                $redirectRoute = '/sign-up-parents';
                 break;
-            case 'tutors':
-                return redirect('/sign-up-tutor-page');
+            case 'tutor':
+                $redirectRoute = '/sign-up-tutor';
                 break;
-            default:
-                return response()->json(['error' => 'Invalid role selected'], 400);
         }
+
+        return response()->json(['redirect' => $redirectRoute]);
     }
 }
