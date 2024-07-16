@@ -57,7 +57,7 @@ function SignupNavbar() {
                 style={{ maxWidth: "110px" }}
               />
             </NavbarBrand>
-            <UncontrolledTooltip target="#navbar-brand">By auniraden</UncontrolledTooltip>
+            <UncontrolledTooltip placement="bottom" target="#navbar-brand">By auniraden</UncontrolledTooltip>
             <button
               className="navbar-toggler"
               onClick={() => {
@@ -86,11 +86,11 @@ function SignupNavbar() {
                       Lembaga Peperiksaan Malaysia Sijil Pelajaran Malaysia (SPM)
                     </DropdownItem>
                     <DropdownItem href="https://www.cambridgeinternational.org/" target="_blank">
-                      <i className="now-ui-icons objects_globe mr-1"></i>
+                      <i className="now-ui-icons objects_globe mr-1" ></i>
                       Cambridge Assessment International Education (IGCSE)
                     </DropdownItem>
                     <DropdownItem href="https://qualifications.pearson.com/en/home.html" target="_blank">
-                      <i className="now-ui-icons objects_globe mr-1"></i>
+                      <i className="now-ui-icons objects_globe mr-1" ></i>
                       Pearson Edexcel (IGCSE)
                     </DropdownItem>
                     <DropdownItem href="https://www.oxfordaqa.com/subjects/" target="_blank">
@@ -127,9 +127,9 @@ function SignupNavbar() {
                   target="_blank"
                 >
                   <i className="now-ui-icons arrows-1_share-66 mr-1"></i>
-                  <p>SIGN-IN</p>
+                  <p id="sign-in">SIGN-IN</p>
                 </Button>
-                <UncontrolledTooltip target="#sign-in">
+                <UncontrolledTooltip placement="bottom"target="sign-in">
                   Have an account? Sign in here!
                 </UncontrolledTooltip>
               </NavItem>

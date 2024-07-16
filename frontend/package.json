@@ -3,6 +3,9 @@
   "version": "1.5.2",
   "private": true,
   "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-keywords": "^5.1.0",
+    "axios": "^1.7.2",
     "moment": "2.29.4",
     "nouislider": "15.4.0",
     "react": ">=16.8.0",
@@ -12,7 +15,8 @@
     "react-router-dom": "6.11.1",
     "react-scripts": "5.0.1",
     "reactstrap": "8.10.0",
-    "sass": "1.62.1"
+    "sass": "1.62.1",
+    "typescript": "^4.9.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -43,12 +47,15 @@
     "react-dom": ">=16.8.0"
   },
   "optionalDependencies": {
-    "@babel/core": "7.18.9",
-    "typescript": "5.0.4"
+    "@babel/core": "7.18.9"
   },
   "overrides": {
     "svgo": "3.0.2",
     "fsevents": "2.3.2",
     "chokidar": "3.5.3"
+  },
+  "devDependencies": {
+    "@types/eslint-visitor-keys": "^3.3.0",
+    "@types/testing-library__jest-dom": "^6.0.0"
   }
 }

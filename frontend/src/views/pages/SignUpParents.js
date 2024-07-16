@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { useState } from "react";
 // reactstrap components
 import {
   Button,
@@ -20,34 +21,24 @@ import {
   UncontrolledDropdown,
   UncontrolledTooltip
 } from "reactstrap";
+import SignupNavbar from "components/Navbars/SignupNavbar";
 
 function SignUpParents() {
   const [firstFocus, setFirstFocus] = React.useState(false);
   const [lastFocus, setLastFocus] = React.useState(false);
   const [emailFocus, setEmailFocus] = React.useState(false);
-  const [childrenCount, setChildrenCount] = useState(0);
+  const [selectedCurriculum, setSelectedCurriculum] = useState([]);
 
-  const renderChildInputs = () => {
-    let inputs = [];
-    for (let i = 0; i < childrenCount; i++) {
-      inputs.push(
-        <InputGroup key={i} className="no-border mb-2">
-          <InputGroupAddon addonType="prepend">
-            <InputGroupText>
-              <i className="now-ui-icons ui-1_email-85"></i>
-            </InputGroupText>
-          </InputGroupAddon>
-          <Input
-            placeholder={`itSTARTSwith@yourChild${i + 1}.com`}
-            type="email"
-          />
-        </InputGroup>
-      );
-    }
-    return inputs;
+  const handleCurriculumChange = (e) => {
+    const value = e.target.value;
+    setSelectedCurriculum(prev =>
+      prev.includes(value) ? prev.filter(item => item !== value) : [...prev, value]
+    );
   };
 
   return (
+    <>
+    <SignupNavbar/>
     <div
       className="section section-signup"
       style={{
@@ -59,17 +50,18 @@ function SignUpParents() {
     >
       <Container>
         <Row>
-          <Card className="card-signup" data-background-color="white">
+          <Card className="card-signup" data-background-color="F7F0EB">
             <Form action="" className="form" method="">
-              <div className="col-sm-2">
+              <div className="col-12 text-center mb-4">
                 <img
-                  className="rounded img-raised"
+                  className="rounded"
                   src={require("assets/img/itstarts-logo-final.png")}
                   alt="it starts logo"
+                  style={{ maxWidth: "150px" }}
                 />
               </div>
               <CardHeader className="text-center">
-                <CardTitle className="title-up" tag="h3">
+                <CardTitle className="title-up" tag="h3" style={{ color: "#232D22" }}>
                   Sign Up
                 </CardTitle>
               </CardHeader>
@@ -77,7 +69,7 @@ function SignUpParents() {
                 <InputGroup className={"no-border" + (firstFocus ? " input-group-focus" : "")}>
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
-                      <i className="now-ui-icons users_circle-08"></i>
+                      <i className="now-ui-icons users_circle-08" style={{ color: "#232D22" }}></i>
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
@@ -85,12 +77,13 @@ function SignUpParents() {
                     type="text"
                     onFocus={() => setFirstFocus(true)}
                     onBlur={() => setFirstFocus(false)}
+                    style={{ color: "#232D22" }}
                   ></Input>
                 </InputGroup>
                 <InputGroup className={"no-border" + (lastFocus ? " input-group-focus" : "")}>
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
-                      <i className="now-ui-icons text_caps-small"></i>
+                      <i className="now-ui-icons text_caps-small" style={{ color: "#232D22" }}></i>
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
@@ -98,12 +91,13 @@ function SignUpParents() {
                     type="text"
                     onFocus={() => setLastFocus(true)}
                     onBlur={() => setLastFocus(false)}
+                    style={{ color: "#232D22" }}
                   ></Input>
                 </InputGroup>
                 <InputGroup className={"no-border" + (emailFocus ? " input-group-focus" : "")}>
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
-                      <i className="now-ui-icons ui-1_email-85"></i>
+                      <i className="now-ui-icons ui-1_email-85" style={{ color: "#232D22" }}></i>
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
@@ -111,92 +105,171 @@ function SignUpParents() {
                     type="text"
                     onFocus={() => setEmailFocus(true)}
                     onBlur={() => setEmailFocus(false)}
+                    style={{ color: "#232D22" }}
                   ></Input>
                 </InputGroup>
-                <InputGroupAddon addonType="prepend">
-                  <UncontrolledDropdown>
-                    <p id="right">Curriculum</p>
-                    <UncontrolledTooltip
+                <InputGroup className="no-border">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="now-ui-icons education_hat" style={{ color: "#232D22" }}></i>
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <UncontrolledTooltip
                       placement="right"
-                      target="right"
+                      target="dropdownMenuButton"
                       delay={0}
+
                     >
                       Choose your preferred exam boards and stay updated on registration dates and exam updates.
                     </UncontrolledTooltip>
+                  <UncontrolledDropdown>
                     <DropdownToggle
                       aria-expanded={false}
                       aria-haspopup={true}
                       caret
-                      color="secondary"
+                      color="primary"
                       data-toggle="dropdown"
                       id="dropdownMenuButton"
                       type="button"
+                      style={{ marginLeft: "20px", backgroundColor:"#F7F0EB", color:"#232D22"}}
                     >
-                      <DropdownMenu aria-labelledby="dropdownMenuButton">
-                        <DropdownItem
-                          href="https://sppat2.moe.gov.my/cp/spm/cpindex.asp"
-                          target="_blank"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          Lembaga Peperiksaan Malaysia Sijil Pelajaran Malaysia (SPM)
-                        </DropdownItem>
-                        <DropdownItem
-                          href="https://www.cambridgeinternational.org/"
-                          target="_blank"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          Cambridge Assessment International Education (IGCSE)
-                        </DropdownItem>
-                        <DropdownItem
-                          href="https://qualifications.pearson.com/en/home.html"
-                          target="_blank"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          Pearson Edexcel
-                        </DropdownItem>
-                        <DropdownItem
-                          href="https://www.oxfordaqa.com/subjects/"
-                          target="_blank"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          Oxford AQA
-                        </DropdownItem>
-                      </DropdownMenu>
+                      Select Curriculum
                     </DropdownToggle>
+                    <DropdownMenu aria-labelledby="dropdownMenuButton">
+                      <DropdownItem toggle={false}>
+                        <input
+                          type="checkbox"
+                          value="SPM"
+                          onChange={handleCurriculumChange}
+                          checked={selectedCurriculum.includes("SPM")}
+                          style={{marginRight: "10px"}}
+                        />{" "}
+                        Lembaga Peperiksaan Malaysia Sijil Pelajaran Malaysia (SPM)
+                      </DropdownItem>
+                      <DropdownItem toggle={false}>
+                        <input
+                          type="checkbox"
+                          value="Cambridge IGCSE"
+                          onChange={handleCurriculumChange}
+                          checked={selectedCurriculum.includes("Cambridge IGCSE")}
+                          style={{marginRight: "10px"}}
+                        />{" "}
+                        Cambridge Assessment International Education (IGCSE)
+                      </DropdownItem>
+                      <DropdownItem toggle={false}>
+                        <input
+                          type="checkbox"
+                          value="Pearson IGCSE"
+                          onChange={handleCurriculumChange}
+                          checked={selectedCurriculum.includes("Pearson IGCSE")}
+                          style={{marginRight: "10px"}}
+                        />{" "}
+                        Pearson Edexcel (IGCSE)
+                      </DropdownItem>
+                      <DropdownItem toggle={false}>
+                        <input
+                          type="checkbox"
+                          value="AQA IGCSE"
+                          onChange={handleCurriculumChange}
+                          checked={selectedCurriculum.includes("AQA IGCSE")}
+                          style={{marginRight: "10px"}}
+                        />{" "}
+                        Oxford AQA (IGCSE)
+                      </DropdownItem>
+                    </DropdownMenu>
                   </UncontrolledDropdown>
-                </InputGroupAddon>
-
-                {/* New fields for number of children and connecting children's accounts */}
-                <InputGroup className="no-border mt-3">
+                </InputGroup>
+                <InputGroup className="no-border">
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
-                      <i className="now-ui-icons users_single-02"></i>
+                      <i className="now-ui-icons business_badge" style={{ color: "#232D22" }}></i>
                     </InputGroupText>
                   </InputGroupAddon>
-                  <Input
-                    type="select"
-                    onChange={(e) => setChildrenCount(parseInt(e.target.value))}
-                  >
-                    <option value="0">How many children to sign up?</option>
-                    {[1, 2, 3, 4, 5].map(num => (
-                      <option key={num} value={num}>{num}</option>
-                    ))}
-                  </Input>
-                </InputGroup>
+                  <UncontrolledTooltip
+                      placement="right"
+                      target="dropdownMenuButton"
+                      delay={0}
 
-                {childrenCount > 0 && (
-                  <div className="mt-3">
-                    <p>Connect with your children:</p>
-                    {renderChildInputs()}
-                  </div>
-                )}
+                    >
+                      Choose up to five kids to enhance your connection with each of your kid.
+                    </UncontrolledTooltip>
+                  <UncontrolledDropdown>
+                    <DropdownToggle
+                      aria-expanded={false}
+                      aria-haspopup={true}
+                      caret
+                      color="primary"
+                      data-toggle="dropdown"
+                      id="dropdownMenuButton"
+                      type="button"
+                      style={{ marginLeft: "20px", backgroundColor:"#F7F0EB", color:"#232D22"}}
+                    >
+                      My Kids
+                    </DropdownToggle>
+                    <DropdownMenu aria-labelledby="dropdownMenuButton">
+                      <DropdownItem toggle={false}>
+                        <input
+                          type="checkbox"
+                          value="SPM"
+                          onChange={handleCurriculumChange}
+                          checked={selectedCurriculum.includes("should choose number")}
+                          style={{marginRight: "10px"}}
+                        />{" "}
+                        1
+                      </DropdownItem>
+                      <DropdownItem toggle={false}>
+                        <input
+                          type="checkbox"
+                          value="Cambridge IGCSE"
+                          onChange={handleCurriculumChange}
+                          checked={selectedCurriculum.includes("number")}
+                          style={{marginRight: "10px"}}
+                        />{" "}
+                        2
+                      </DropdownItem>
+                      <DropdownItem toggle={false}>
+                        <input
+                          type="checkbox"
+                          value="Pearson IGCSE"
+                          onChange={handleCurriculumChange}
+                          checked={selectedCurriculum.includes("number")}
+                          style={{marginRight: "10px"}}
+                        />{" "}
+                        3
+                      </DropdownItem>
+                      <DropdownItem toggle={false}>
+                        <input
+                          type="checkbox"
+                          value="AQA IGCSE"
+                          onChange={handleCurriculumChange}
+                          checked={selectedCurriculum.includes("number")}
+                          style={{marginRight: "10px"}}
+                        />{" "}
+                        4
+                      </DropdownItem>
+                      <DropdownItem toggle={false}>
+                        <input
+                          type="checkbox"
+                          value="AQA IGCSE"
+                          onChange={handleCurriculumChange}
+                          checked={selectedCurriculum.includes("number")}
+                          style={{marginRight: "10px"}}
+                        />{" "}
+                        5
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                </InputGroup>
               </CardBody>
               <CardFooter className="text-center">
                 <Button
                   className="btn-round"
                   color="primary"
                   href="#pablo"
-                  onClick={(e) => e.preventDefault()}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    console.log("Selected Curriculum: ", selectedCurriculum);
+                  }}
                   size="lg"
                 >
                   Sign up
@@ -207,6 +280,7 @@ function SignUpParents() {
         </Row>
       </Container>
     </div>
+  </>
   );
 }
 

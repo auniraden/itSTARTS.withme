@@ -2553,27 +2553,27 @@ fieldset[disabled] .btn-link.active {
 }
 
 .form-control::-moz-placeholder {
-  color: #888888;
-  opacity: 0.8;
-  filter: alpha(opacity=80);
+  color: #232d23;
+  opacity: 0.95;
+  filter: alpha(opacity=95);
 }
 
 .form-control:-moz-placeholder {
-  color: #888888;
-  opacity: 0.8;
-  filter: alpha(opacity=80);
+  color: #232d23;
+  opacity: 0.95;
+  filter: alpha(opacity=95);
 }
 
 .form-control::-webkit-input-placeholder {
-  color: #888888;
-  opacity: 0.8;
-  filter: alpha(opacity=80);
+  color: #232d23;
+  opacity: 0.95;
+  filter: alpha(opacity=95);
 }
 
 .form-control:-ms-input-placeholder {
-  color: #888888;
-  opacity: 0.8;
-  filter: alpha(opacity=80);
+  color: #232d23;
+  opacity: 0.95;
+  filter: alpha(opacity=95);
 }
 
 .form-control {
@@ -6066,25 +6066,25 @@ img {
   background-color: #ffffff;
   border-color: #ffffff;
 }
-[data-background-color]:not([data-background-color="gray"])
+[data-background-color]:not([data-background-color="#232d23"])
   .form-control::-moz-placeholder {
   color: #ebebeb;
   opacity: 1;
   filter: alpha(opacity=100);
 }
-[data-background-color]:not([data-background-color="gray"])
+[data-background-color]:not([data-background-color="#232d23"])
   .form-control:-moz-placeholder {
   color: #ebebeb;
   opacity: 1;
   filter: alpha(opacity=100);
 }
-[data-background-color]:not([data-background-color="gray"])
+[data-background-color]:not([data-background-color="#232d23"])
   .form-control::-webkit-input-placeholder {
   color: #ebebeb;
   opacity: 1;
   filter: alpha(opacity=100);
 }
-[data-background-color]:not([data-background-color="gray"])
+[data-background-color]:not([data-background-color="#232d23"])
   .form-control:-ms-input-placeholder {
   color: #ebebeb;
   opacity: 1;
@@ -7997,4 +7997,8 @@ td.rdtYear:hover {
     padding-left: 10px;
     padding-right: 10px;
   }
+}
+
+.dropdown-with-margin{
+  margin-right: 150px;
 }

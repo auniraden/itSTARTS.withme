@@ -21,6 +21,7 @@ import {
   UncontrolledDropdown,
   UncontrolledTooltip
 } from "reactstrap";
+import SignupNavbar from "components/Navbars/SignupNavbar";
 
 function SignUpHomeschooler() {
   const [firstFocus, setFirstFocus] = React.useState(false);
@@ -36,6 +37,8 @@ function SignUpHomeschooler() {
   };
 
   return (
+    <>
+    <SignupNavbar/>
     <div
       className="section section-signup"
       style={{
@@ -105,19 +108,21 @@ function SignUpHomeschooler() {
                     style={{ color: "#232D22" }}
                   ></Input>
                 </InputGroup>
-                <InputGroupAddon addonType="prepend">
-                  <UncontrolledDropdown>
-                  <InputGroupText>
-                      <i className="now-ui-icons education_agenda-bookmark" style={{ color: "#232D22" }}></i>
+                <InputGroup className="no-border">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="now-ui-icons education_hat" style={{ color: "#232D22" }}></i>
                     </InputGroupText>
-                    <UncontrolledTooltip
+                  </InputGroupAddon>
+                  <UncontrolledTooltip
                       placement="right"
-                      target="right"
+                      target="dropdownMenuButton"
                       delay={0}
 
                     >
                       Choose your preferred exam boards and stay updated on registration dates and exam updates.
                     </UncontrolledTooltip>
+                  <UncontrolledDropdown>
                     <DropdownToggle
                       aria-expanded={false}
                       aria-haspopup={true}
@@ -126,45 +131,54 @@ function SignUpHomeschooler() {
                       data-toggle="dropdown"
                       id="dropdownMenuButton"
                       type="button"
+                      style={{ marginLeft: "20px", backgroundColor:"#F7F0EB", color:"#232D22"}}
                     >
                       Select Curriculum
-                      <DropdownMenu aria-labelledby="dropdownMenuButton">
-                        <DropdownItem toggle={false}>
-                          <input
-                            type="checkbox"
-                            value="SPM"
-                            onChange={handleCurriculumChange}
-                            checked={selectedCurriculum.includes("SPM")}/> {""}
-                          Lembaga Peperiksaan Malaysia Sijil Pelajaran Malaysia (SPM)
-                        </DropdownItem>
-                        <DropdownItem toggle={false}>
-                          <input
-                            type="checkbox"
-                            value="Cambridge IGCSE"
-                            onChange={handleCurriculumChange}
-                            checked={selectedCurriculum.includes("Cambridge IGCSE")}/> {""}
-                          Cambridge Assessment International Education (IGCSE)
-                        </DropdownItem>
-                        <DropdownItem toggle={false}>
-                          <input
-                            type="checkbox"
-                            value="Pearson IGCSE"
-                            onChange={handleCurriculumChange}
-                            checked={selectedCurriculum.includes("Pearson IGCSE")}/> {""}
-                          Pearson Edexcel (IGCSE)
-                        </DropdownItem>
-                        <DropdownItem toggle ={false}>
-                          <input
-                            type="checkbox"
-                            value="AQA IGCSE"
-                            onChange={handleCurriculumChange}
-                            checked={selectedCurriculum.includes("AQA IGCSE")}/> {""}
-                          Oxford AQA (IGCSE)
-                        </DropdownItem>
-                      </DropdownMenu>
                     </DropdownToggle>
+                    <DropdownMenu aria-labelledby="dropdownMenuButton">
+                      <DropdownItem toggle={false}>
+                        <input
+                          type="checkbox"
+                          value="SPM"
+                          onChange={handleCurriculumChange}
+                          checked={selectedCurriculum.includes("SPM")}
+                          style={{marginRight: "10px"}}
+                        />{" "}
+                        Lembaga Peperiksaan Malaysia Sijil Pelajaran Malaysia (SPM)
+                      </DropdownItem>
+                      <DropdownItem toggle={false}>
+                        <input
+                          type="checkbox"
+                          value="Cambridge IGCSE"
+                          onChange={handleCurriculumChange}
+                          checked={selectedCurriculum.includes("Cambridge IGCSE")}
+                          style={{marginRight: "10px"}}
+                        />{" "}
+                        Cambridge Assessment International Education (IGCSE)
+                      </DropdownItem>
+                      <DropdownItem toggle={false}>
+                        <input
+                          type="checkbox"
+                          value="Pearson IGCSE"
+                          onChange={handleCurriculumChange}
+                          checked={selectedCurriculum.includes("Pearson IGCSE")}
+                          style={{marginRight: "10px"}}
+                        />{" "}
+                        Pearson Edexcel (IGCSE)
+                      </DropdownItem>
+                      <DropdownItem toggle={false}>
+                        <input
+                          type="checkbox"
+                          value="AQA IGCSE"
+                          onChange={handleCurriculumChange}
+                          checked={selectedCurriculum.includes("AQA IGCSE")}
+                          style={{marginRight: "10px"}}
+                        />{" "}
+                        Oxford AQA (IGCSE)
+                      </DropdownItem>
+                    </DropdownMenu>
                   </UncontrolledDropdown>
-                </InputGroupAddon>
+                </InputGroup>
               </CardBody>
               <CardFooter className="text-center">
                 <Button
@@ -185,6 +199,7 @@ function SignUpHomeschooler() {
         </Row>
       </Container>
     </div>
+  </>
   );
 }
 
