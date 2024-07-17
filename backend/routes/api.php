@@ -1,19 +1,21 @@
 <?php
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TutorsSignupController;
-use App\Http\Controllers\ParentsSignupController;
-use App\Http\Controllers\HomeschoolersSignupController;
+use App\Http\Controllers\HomeschoolerSignUpController;
+use App\Http\Controllers\ParentSignUpController;
+use App\Http\Controllers\TutorSignUpController;
 use App\Http\Controllers\RoleSelectionController;
 
-//  tutors signup
-Route::post('/signup/tutors', [TutorsSignupController::class, 'signup']);
 
-//  parents signup
-Route::post('/signup/parents', [ParentsSignupController::class, 'signup']);
+// Homeschooler Sign Up
+Route::post('/homeschooler/register', [HomeschoolerSignUpController::class, 'register']);
 
-//  homeschoolers signup
-Route::post('/signup/homeschoolers', [HomeschoolersSignupController::class, 'signup']);
+// Parent Sign Up
+Route::post('/parent/register', [ParentSignUpController::class, 'register']);
+
+// Tutor Sign Up
+Route::post('/tutor/register', [TutorSignUpController::class, 'register']);
+
 
 Route::post('/select-role', [RoleSelectionController::class, 'selectRole']);
 

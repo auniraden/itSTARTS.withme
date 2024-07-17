@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
@@ -39,43 +40,43 @@ class User extends Authenticatable
         return $this->belongsTo(Curriculum::class);
     }
 
-    // A user has many tasks
+    // A student has many tasks
     public function tasks()
     {
         return $this->hasMany(Task::class, 'student_id');
     }
 
-    // A user has many tutor subjects
+    // A tutor has many subjects
     public function tutorSubjects()
     {
         return $this->hasMany(TutorSubject::class, 'tutor_id');
     }
 
-    // A user has many progress reports
+    // A student has many progress reports
     public function progressReports()
     {
         return $this->hasMany(ProgressReport::class, 'student_id');
     }
 
-    // A user has many letters
+    // A student has many letters
     public function letters()
     {
         return $this->hasMany(Letter::class, 'student_id');
     }
 
-    // A user has many invoices
+    // A parent has many invoices
     public function invoices()
     {
         return $this->hasMany(Invoice::class, 'student_id');
     }
 
-    // A user has many goals
+    // A student has many goals
     public function goals()
     {
         return $this->hasMany(Goal::class, 'student_id');
     }
 
-    // A user has many children (if the user is a parent)
+    // A parent has many children
     public function children()
     {
         return $this->hasMany(Child::class, 'parent_id');
@@ -87,9 +88,16 @@ class User extends Authenticatable
         return $this->hasMany(Chat::class, 'user_id');
     }
 
-    // A user has many classes as a tutor
+    // A tutor has many classes
     public function classes()
     {
         return $this->hasMany(ClassModel::class, 'tutor_id');
     }
+
+    // A tutor has many qualifications
+    public function qualifications()
+    {
+        return $this->hasMany(Qualification::class, 'tutor_id');
+    }
+
 }

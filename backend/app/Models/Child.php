@@ -11,18 +11,12 @@ class Child extends Model
 
     protected $fillable = [
         'parent_id',
-        'child_id',
+        'email',
     ];
 
     // Define the relationship with the Parent (User) model
     public function parent()
     {
         return $this->belongsTo(User::class, 'parent_id');
-    }
-
-    // Define the relationship with the Child (User) model
-    public function child()
-    {
-        return $this->belongsTo(User::class, 'child_id');
     }
 }
