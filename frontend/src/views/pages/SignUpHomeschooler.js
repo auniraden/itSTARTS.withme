@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import axios from "axios";
 // reactstrap components
 import {
   Button,
@@ -116,68 +117,72 @@ function SignUpHomeschooler() {
                   </InputGroupAddon>
                   <UncontrolledTooltip
                       placement="right"
-                      target="dropdownMenuButton"
+                      target="dropdownMenuButtonC"
                       delay={0}
 
                     >
                       Choose your preferred exam boards and stay updated on registration dates and exam updates.
                     </UncontrolledTooltip>
-                  <UncontrolledDropdown>
-                    <DropdownToggle
-                      aria-expanded={false}
-                      aria-haspopup={true}
-                      caret
-                      color="primary"
-                      data-toggle="dropdown"
-                      id="dropdownMenuButton"
-                      type="button"
-                      style={{ marginLeft: "20px", backgroundColor:"#F7F0EB", color:"#232D22"}}
-                    >
-                      Select Curriculum
-                    </DropdownToggle>
-                    <DropdownMenu aria-labelledby="dropdownMenuButton">
-                      <DropdownItem toggle={false}>
-                        <input
-                          type="checkbox"
-                          value="SPM"
-                          onChange={handleCurriculumChange}
-                          checked={selectedCurriculum.includes("SPM")}
-                          style={{marginRight: "10px"}}
-                        />{" "}
-                        Lembaga Peperiksaan Malaysia Sijil Pelajaran Malaysia (SPM)
-                      </DropdownItem>
-                      <DropdownItem toggle={false}>
-                        <input
-                          type="checkbox"
-                          value="Cambridge IGCSE"
-                          onChange={handleCurriculumChange}
-                          checked={selectedCurriculum.includes("Cambridge IGCSE")}
-                          style={{marginRight: "10px"}}
-                        />{" "}
-                        Cambridge Assessment International Education (IGCSE)
-                      </DropdownItem>
-                      <DropdownItem toggle={false}>
-                        <input
-                          type="checkbox"
-                          value="Pearson IGCSE"
-                          onChange={handleCurriculumChange}
-                          checked={selectedCurriculum.includes("Pearson IGCSE")}
-                          style={{marginRight: "10px"}}
-                        />{" "}
-                        Pearson Edexcel (IGCSE)
-                      </DropdownItem>
-                      <DropdownItem toggle={false}>
-                        <input
-                          type="checkbox"
-                          value="AQA IGCSE"
-                          onChange={handleCurriculumChange}
-                          checked={selectedCurriculum.includes("AQA IGCSE")}
-                          style={{marginRight: "10px"}}
-                        />{" "}
-                        Oxford AQA (IGCSE)
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
+                    <UncontrolledDropdown>
+                      <DropdownToggle
+                        aria-expanded={false}
+                        aria-haspopup={true}
+                        caret
+                        color="primary"
+                        data-toggle="dropdown"
+                        id="dropdownMenuButtonC"
+                        type="button"
+                        style={{ marginLeft: "20px", backgroundColor: "#F7F0EB", color: "#232D22" }}
+                      >
+                        Select Curriculum
+                      </DropdownToggle>
+                      <DropdownMenu aria-labelledby="dropdownMenuButton">
+                        <DropdownItem toggle={false}>
+                          <input
+                            type="radio"
+                            name="curriculum"
+                            value="SPM"
+                            onChange={handleCurriculumChange}
+                            checked={selectedCurriculum === "SPM"}
+                            style={{ marginRight: "10px" }}
+                          />{" "}
+                          Lembaga Peperiksaan Malaysia Sijil Pelajaran Malaysia (SPM)
+                        </DropdownItem>
+                        <DropdownItem toggle={false}>
+                          <input
+                            type="radio"
+                            name="curriculum"
+                            value="Cambridge IGCSE"
+                            onChange={handleCurriculumChange}
+                            checked={selectedCurriculum === "Cambridge IGCSE"}
+                            style={{ marginRight: "10px" }}
+                          />{" "}
+                          Cambridge Assessment International Education (IGCSE)
+                        </DropdownItem>
+                        <DropdownItem toggle={false}>
+                          <input
+                            type="radio"
+                            name="curriculum"
+                            value="Pearson IGCSE"
+                            onChange={handleCurriculumChange}
+                            checked={selectedCurriculum === "Pearson IGCSE"}
+                            style={{ marginRight: "10px" }}
+                          />{" "}
+                          Pearson Edexcel (IGCSE)
+                        </DropdownItem>
+                        <DropdownItem toggle={false}>
+                          <input
+                            type="radio"
+                            name="curriculum"
+                            value="AQA IGCSE"
+                            onChange={handleCurriculumChange}
+                            checked={selectedCurriculum === "AQA IGCSE"}
+                            style={{ marginRight: "10px" }}
+                          />{" "}
+                          Oxford AQA (IGCSE)
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
                 </InputGroup>
               </CardBody>
               <CardFooter className="text-center">
@@ -191,7 +196,7 @@ function SignUpHomeschooler() {
                   }}
                   size="lg"
                 >
-                  Sign up
+                  Get Started
                 </Button>
               </CardFooter>
             </Form>

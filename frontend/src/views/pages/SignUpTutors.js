@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 // reactstrap components
 import {
   Button,
@@ -23,6 +24,7 @@ import {
   Label,
   Alert
 } from "reactstrap";
+import SignupNavbar from "components/Navbars/SignupNavbar";
 
 function SignUpTutor() {
   const [firstFocus, setFirstFocus] = React.useState(false);
@@ -30,6 +32,7 @@ function SignUpTutor() {
   const [emailFocus, setEmailFocus] = React.useState(false);
   const [files, setFiles] = useState([]);
   const [alertMessage, setAlertMessage] = useState("");
+  const [selectedCurriculum, setSelectedCurriculum] = useState("");
 
   const handleFileUpload = (event) => {
     const uploadedFiles = Array.from(event.target.files);
@@ -39,161 +42,207 @@ function SignUpTutor() {
     if (totalSize > maxSize) {
       setAlertMessage("Total file size exceeds 100MB limit. Please reduce the file size.");
     } else {
-      setFiles(uploadedFiles);
+      setFiles((prevFiles) => [...prevFiles, ...uploadedFiles]);
       setAlertMessage("");
     }
   };
 
+  const handleCurriculumChange = (e) => {
+    setSelectedCurriculum(e.target.value);
+  };
+
   return (
-    <div
-      className="section section-signup"
-      style={{
-        backgroundColor: "#F7F0EB",
-        backgroundSize: "cover",
-        backgroundPosition: "top center",
-        minHeight: "700px"
-      }}
-    >
-      <Container>
-        <Row>
-          <Card className="card-signup" data-background-color="white">
-            <Form action="" className="form" method="">
-              <div className="col-sm-2">
-                <img
-                  className="rounded img-raised"
-                  src={require("assets/img/itstarts-logo-final.png")}
-                  alt="it starts logo"
-                />
-              </div>
-              <CardHeader className="text-center">
-                <CardTitle className="title-up" tag="h3">
-                  Sign Up
-                </CardTitle>
-              </CardHeader>
-              <CardBody>
-                <InputGroup className={"no-border" + (firstFocus ? " input-group-focus" : "")}>
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="now-ui-icons users_circle-08"></i>
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Your First Name Here ;)"
-                    type="text"
-                    onFocus={() => setFirstFocus(true)}
-                    onBlur={() => setFirstFocus(false)}
-                  ></Input>
-                </InputGroup>
-                <InputGroup className={"no-border" + (lastFocus ? " input-group-focus" : "")}>
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="now-ui-icons text_caps-small"></i>
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Your Last Name Here ;)"
-                    type="text"
-                    onFocus={() => setLastFocus(true)}
-                    onBlur={() => setLastFocus(false)}
-                  ></Input>
-                </InputGroup>
-                <InputGroup className={"no-border" + (emailFocus ? " input-group-focus" : "")}>
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="now-ui-icons ui-1_email-85"></i>
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Email..."
-                    type="text"
-                    onFocus={() => setEmailFocus(true)}
-                    onBlur={() => setEmailFocus(false)}
-                  ></Input>
-                </InputGroup>
-                <InputGroupAddon addonType="prepend">
-                  <UncontrolledDropdown>
-                    <p id="right">Curriculum</p>
+    <>
+      <SignupNavbar />
+      <div
+        className="section section-signup"
+        style={{
+          backgroundColor: "#F7F0EB",
+          backgroundSize: "cover",
+          backgroundPosition: "top center",
+          minHeight: "700px"
+        }}
+      >
+        <Container>
+          <Row>
+            <Card className="card-signup" data-background-color="F7F0EB">
+              <Form action="" className="form" method="">
+                <div className="col-12 text-center mb-4">
+                  <img
+                    className="rounded"
+                    src={require("assets/img/itstarts-logo-final.png")}
+                    alt="it starts logo"
+                    style={{ maxWidth: "150px" }}
+                  />
+                </div>
+                <CardHeader className="text-center">
+                  <CardTitle className="title-up" tag="h3" style={{ color: "#232D22" }}>
+                    Sign Up
+                  </CardTitle>
+                </CardHeader>
+                <CardBody>
+                  <InputGroup className={"no-border" + (firstFocus ? " input-group-focus" : "")}>
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="now-ui-icons users_circle-08" style={{ color: "#232D22" }}></i>
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      placeholder="Your First Name Here ;)"
+                      type="text"
+                      onFocus={() => setFirstFocus(true)}
+                      onBlur={() => setFirstFocus(false)}
+                      style={{ color: "#232D22" }}
+                    ></Input>
+                  </InputGroup>
+                  <InputGroup className={"no-border" + (lastFocus ? " input-group-focus" : "")}>
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="now-ui-icons text_caps-small" style={{ color: "#232D22" }}></i>
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      placeholder="Your Last Name Here ;)"
+                      type="text"
+                      onFocus={() => setLastFocus(true)}
+                      onBlur={() => setLastFocus(false)}
+                      style={{ color: "#232D22" }}
+                    ></Input>
+                  </InputGroup>
+                  <InputGroup className={"no-border" + (emailFocus ? " input-group-focus" : "")}>
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="now-ui-icons ui-1_email-85" style={{ color: "#232D22" }}></i>
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      placeholder="Email..."
+                      type="text"
+                      onFocus={() => setEmailFocus(true)}
+                      onBlur={() => setEmailFocus(false)}
+                      style={{ color: "#232D22" }}
+                    ></Input>
+                  </InputGroup>
+                  <InputGroup className="no-border">
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="now-ui-icons education_hat" style={{ color: "#232D22" }}></i>
+                      </InputGroupText>
+                    </InputGroupAddon>
                     <UncontrolledTooltip
                       placement="right"
-                      target="right"
+                      target="dropdownMenuButtonC"
                       delay={0}
                     >
-                      Select your expertise based on exam boards to demonstrate your qualification as a tutor.
+                      Select the exam boards you are qualified to teach.
                     </UncontrolledTooltip>
-                    <DropdownToggle
-                      aria-expanded={false}
-                      aria-haspopup={true}
-                      caret
-                      color="secondary"
-                      data-toggle="dropdown"
-                      id="dropdownMenuButton"
-                      type="button"
+                    <UncontrolledDropdown>
+                      <DropdownToggle
+                        aria-expanded={false}
+                        aria-haspopup={true}
+                        caret
+                        color="primary"
+                        data-toggle="dropdown"
+                        id="dropdownMenuButtonC"
+                        type="button"
+                        style={{ marginLeft: "20px", backgroundColor: "#F7F0EB", color: "#232D22" }}
+                      >
+                        Select Curriculum
+                      </DropdownToggle>
+                      <DropdownMenu aria-labelledby="dropdownMenuButtonC">
+                        <DropdownItem toggle={false}>
+                          <input
+                            type="radio"
+                            name="curriculum"
+                            value="SPM"
+                            onChange={handleCurriculumChange}
+                            checked={selectedCurriculum === "SPM"}
+                            style={{ marginRight: "10px" }}
+                          />{" "}
+                          Lembaga Peperiksaan Malaysia Sijil Pelajaran Malaysia (SPM)
+                        </DropdownItem>
+                        <DropdownItem toggle={false}>
+                          <input
+                            type="radio"
+                            name="curriculum"
+                            value="Cambridge IGCSE"
+                            onChange={handleCurriculumChange}
+                            checked={selectedCurriculum === "Cambridge IGCSE"}
+                            style={{ marginRight: "10px" }}
+                          />{" "}
+                          Cambridge Assessment International Education (IGCSE)
+                        </DropdownItem>
+                        <DropdownItem toggle={false}>
+                          <input
+                            type="radio"
+                            name="curriculum"
+                            value="Pearson IGCSE"
+                            onChange={handleCurriculumChange}
+                            checked={selectedCurriculum === "Pearson IGCSE"}
+                            style={{ marginRight: "10px" }}
+                          />{" "}
+                          Pearson Edexcel (IGCSE)
+                        </DropdownItem>
+                        <DropdownItem toggle={false}>
+                          <input
+                            type="radio"
+                            name="curriculum"
+                            value="AQA IGCSE"
+                            onChange={handleCurriculumChange}
+                            checked={selectedCurriculum === "AQA IGCSE"}
+                            style={{ marginRight: "10px" }}
+                          />{" "}
+                          Oxford AQA (IGCSE)
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                  </InputGroup>
+                  <UncontrolledTooltip
+                      placement="right"
+                      target="qualifications"
+                      delay={0}
                     >
-                      Select an option
-                    </DropdownToggle>
-                    <DropdownMenu aria-labelledby="dropdownMenuButton">
-                      <DropdownItem
-                        href="https://sppat2.moe.gov.my/cp/spm/cpindex.asp"
-                        target="_blank"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        Lembaga Peperiksaan Malaysia Sijil Pelajaran Malaysia (SPM)
-                      </DropdownItem>
-                      <DropdownItem
-                        href="https://www.cambridgeinternational.org/"
-                        target="_blank"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        Cambridge Assessment International Education (IGCSE)
-                      </DropdownItem>
-                      <DropdownItem
-                        href="https://qualifications.pearson.com/en/home.html"
-                        target="_blank"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        Pearson Edexcel
-                      </DropdownItem>
-                      <DropdownItem
-                        href="https://www.oxfordaqa.com/subjects/"
-                        target="_blank"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        Oxford AQA
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
-                </InputGroupAddon>
-                <FormGroup className="mt-4">
-                  <Label for="qualifications"><strong>Qualifications:</strong></Label>
-                  <Input
-                    type="file"
-                    name="qualifications"
-                    id="qualifications"
-                    multiple
-                    onChange={handleFileUpload}
-                  />
-                  <small className="form-text text-muted">
-                    Upload your qualification certificate or other verifying documents here to confirm your eligibility as a tutor (Max 100MB)
-                  </small>
-                </FormGroup>
-                {alertMessage && <Alert color="danger">{alertMessage}</Alert>}
-              </CardBody>
-              <CardFooter className="text-center">
-                <Button
-                  className="btn-round"
-                  color="primary"
-                  href="#pablo"
-                  onClick={(e) => e.preventDefault()}
-                  size="lg"
-                >
-                  Sign up
-                </Button>
-              </CardFooter>
-            </Form>
-          </Card>
-        </Row>
-      </Container>
-    </div>
+                      Click here to upload your document(s).
+                    </UncontrolledTooltip>
+                  <FormGroup className="mt-4">
+                    <Label for="qualifications" style={{ color: "#232D22" }}>
+                      Qualifications:
+                    </Label>
+                    <Input
+                      type="file"
+                      name="qualifications"
+                      id="qualifications"
+                      multiple
+                      onChange={handleFileUpload}
+                    />
+                    <small className="form-text text-muted">
+                      Upload your qualification certificate or other verifying documents here to confirm your eligibility as a tutor (Max 100MB)
+                    </small>
+                    {files.length > 0 && (
+                      <p className="mt-2" style={{color:"#fe4632", fontSize:"12px" }}>
+                        You have uploaded {files.length} document(s).
+                      </p>
+                    )}
+                  </FormGroup>
+                  {alertMessage && <Alert color="danger">{alertMessage}</Alert>}
+                </CardBody>
+                <CardFooter className="text-center">
+                  <Button
+                    className="btn-round"
+                    color="primary"
+                    href="#pablo"
+                    onClick={(e) => e.preventDefault()}
+                    size="lg"
+                  >
+                    Get Started
+                  </Button>
+                </CardFooter>
+              </Form>
+            </Card>
+          </Row>
+        </Container>
+      </div>
+    </>
   );
 }
 
