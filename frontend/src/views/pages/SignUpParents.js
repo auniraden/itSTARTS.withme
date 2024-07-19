@@ -22,12 +22,21 @@ import {
 } from "reactstrap";
 import SignupNavbar from "components/Navbars/SignupNavbar";
 
+
+axios.defaults.baseURL = 'http://127.0.0.1:8000';
+
 function SignUpParents() {
   const [firstFocus, setFirstFocus] = useState(false);
   const [lastFocus, setLastFocus] = useState(false);
   const [emailFocus, setEmailFocus] = useState(false);
   const [selectedCurriculum, setSelectedCurriculum] = useState("");
   const [numberOfKids, setNumberOfKids] = useState(0);
+  const [parentDetails, setParentDetails] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
+  const [kidEmails, setKidEmails] = useState([]);
 
   const handleCurriculumChange = (e) => {
     setSelectedCurriculum(e.target.value);
@@ -35,6 +44,21 @@ function SignUpParents() {
 
   const handleNumberOfKidsChange = (e) => {
     setNumberOfKids(Number(e.target.value));
+    setKidEmails(new Array(Number(e.target.value)).fill(""));
+  };
+
+  const handleParentDetailChange = (e) => {
+    const { name, value } = e.target;
+    setParentDetails((prevDetails) => ({
+      ...prevDetails,
+      [name]: value,
+    }));
+  };
+
+  const handleKidEmailChange = (index, e) => {
+    const newKidEmails = [...kidEmails];
+    newKidEmails[index] = e.target.value;
+    setKidEmails(newKidEmails);
   };
 
   const renderKidEmailInputs = () => {
@@ -48,14 +72,32 @@ function SignUpParents() {
             </InputGroupText>
           </InputGroupAddon>
           <Input
-            placeholder={`My kid ${i}'s email address`}
+            placeholder={`My kid ${i + 1}'s email address`}
             type="email"
             style={{ color: "#232D22" }}
+            value={kidEmails[i]}
+            onChange={(e) => handleKidEmailChange(i, e)}
           ></Input>
         </InputGroup>
       );
     }
     return inputs;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/parent/register', {
+        ...parentDetails,
+        selectedCurriculum,
+        kidEmails,
+      });
+      // Handle successful registration
+      console.log("Great! You're in!", response.data);
+    } catch (error) {
+      // Handle registration error
+      console.error("Woops! There's some problem to get you registered. Please try again in a moment.", error);
+    }
   };
 
   return (
@@ -73,7 +115,7 @@ function SignUpParents() {
         <Container>
           <Row>
             <Card className="card-signup" data-background-color="F7F0EB">
-              <Form action="" className="form" method="">
+              <Form action="" className="form" method="" onSubmit={handleSubmit}>
                 <div className="col-12 text-center mb-4">
                   <img
                     className="rounded"
@@ -97,9 +139,12 @@ function SignUpParents() {
                     <Input
                       placeholder="Your First Name Here ;)"
                       type="text"
+                      name="firstName"
                       onFocus={() => setFirstFocus(true)}
                       onBlur={() => setFirstFocus(false)}
                       style={{ color: "#232D22" }}
+                      value={parentDetails.firstName}
+                      onChange={handleParentDetailChange}
                     ></Input>
                   </InputGroup>
                   <InputGroup className={"no-border" + (lastFocus ? " input-group-focus" : "")}>
@@ -111,9 +156,12 @@ function SignUpParents() {
                     <Input
                       placeholder="Your Last Name Here ;)"
                       type="text"
+                      name="lastName"
                       onFocus={() => setLastFocus(true)}
                       onBlur={() => setLastFocus(false)}
                       style={{ color: "#232D22" }}
+                      value={parentDetails.lastName}
+                      onChange={handleParentDetailChange}
                     ></Input>
                   </InputGroup>
                   <InputGroup className={"no-border" + (emailFocus ? " input-group-focus" : "")}>
@@ -125,9 +173,12 @@ function SignUpParents() {
                     <Input
                       placeholder="Email..."
                       type="text"
+                      name="email"
                       onFocus={() => setEmailFocus(true)}
                       onBlur={() => setEmailFocus(false)}
                       style={{ color: "#232D22" }}
+                      value={parentDetails.email}
+                      onChange={handleParentDetailChange}
                     ></Input>
                   </InputGroup>
                   <InputGroup className="no-border">
@@ -246,11 +297,7 @@ function SignUpParents() {
                   <Button
                     className="btn-round"
                     color="primary"
-                    href="#pablo"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      // Handle form submission
-                    }}
+                    type="submit"
                     size="lg"
 
                   >

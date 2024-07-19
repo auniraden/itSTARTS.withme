@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+
 // reactstrap components
 import {
   Button,
@@ -26,10 +27,14 @@ import {
 } from "reactstrap";
 import SignupNavbar from "components/Navbars/SignupNavbar";
 
+axios.defaults.baseURL = 'http://127.0.0.1:8000';
 function SignUpTutor() {
   const [firstFocus, setFirstFocus] = React.useState(false);
   const [lastFocus, setLastFocus] = React.useState(false);
   const [emailFocus, setEmailFocus] = React.useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [files, setFiles] = useState([]);
   const [alertMessage, setAlertMessage] = useState("");
   const [selectedCurriculum, setSelectedCurriculum] = useState("");
@@ -51,6 +56,32 @@ function SignUpTutor() {
     setSelectedCurriculum(e.target.value);
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("firstName", firstName);
+    formData.append("lastName", lastName);
+    formData.append("email", email);
+    formData.append("curriculum", selectedCurriculum);
+    files.forEach((file, index) => {
+      formData.append(`file_${index}`, file);
+    });
+
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/tutor/register", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (response.status === 200) {
+        // Handle successful registration
+        console.log("Great! You're in!", response.data);
+      }
+    } catch (error) {
+      console.error("Woops! There's some problem to get you registered. Please try again in a moment.", error);
+    }
+  };
+
   return (
     <>
       <SignupNavbar />
@@ -66,7 +97,7 @@ function SignUpTutor() {
         <Container>
           <Row>
             <Card className="card-signup" data-background-color="F7F0EB">
-              <Form action="" className="form" method="">
+              <Form action="" className="form" method="" onSubmit={handleSubmit}>
                 <div className="col-12 text-center mb-4">
                   <img
                     className="rounded"
@@ -90,8 +121,10 @@ function SignUpTutor() {
                     <Input
                       placeholder="Your First Name Here ;)"
                       type="text"
+                      value={firstName}
                       onFocus={() => setFirstFocus(true)}
                       onBlur={() => setFirstFocus(false)}
+                      onChange={(e) => setFirstName(e.target.value)}
                       style={{ color: "#232D22" }}
                     ></Input>
                   </InputGroup>
@@ -104,8 +137,10 @@ function SignUpTutor() {
                     <Input
                       placeholder="Your Last Name Here ;)"
                       type="text"
+                      value={lastName}
                       onFocus={() => setLastFocus(true)}
                       onBlur={() => setLastFocus(false)}
+                      onChange={(e) => setLastName(e.target.value)}
                       style={{ color: "#232D22" }}
                     ></Input>
                   </InputGroup>
@@ -117,9 +152,11 @@ function SignUpTutor() {
                     </InputGroupAddon>
                     <Input
                       placeholder="Email..."
-                      type="text"
+                      type="email"
                       onFocus={() => setEmailFocus(true)}
                       onBlur={() => setEmailFocus(false)}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       style={{ color: "#232D22" }}
                     ></Input>
                   </InputGroup>
@@ -230,8 +267,7 @@ function SignUpTutor() {
                   <Button
                     className="btn-round"
                     color="primary"
-                    href="#pablo"
-                    onClick={(e) => e.preventDefault()}
+                    type="submit"
                     size="lg"
                   >
                     Get Started

@@ -2,38 +2,49 @@
 
 namespace App\Providers;
 
-use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-use App\Http\Controllers\HomeController;
+
 class RouteServiceProvider extends ServiceProvider
 {
-    /**
-     * Define your route model bindings, pattern filters, and other route configuration.
-     *
-     * @return void
-     */
+    protected $namespace = 'App\Http\Controllers';
+
     public function boot()
     {
         parent::boot();
 
         // Ensure that email verification is applied
-        Route::middleware(['auth', EnsureEmailIsVerified::class])
+        Route::middleware(['auth', 'verified'])
             ->group(function () {
-                // Define your routes here that need email verification
-                Route::get('/homeschooler-home', [HomeController::class, 'homeschoolerHome']);
-                Route::get('/parent-home', [HomeController::class, 'parentHome']);
-                Route::get('/tutor-home', [HomeController::class, 'tutorHome']);
+                Route::get('/homeschooler-home', 'HomeController@homeschoolerHome');
+                Route::get('/parent-home', 'HomeController@parentHome');
+                Route::get('/tutor-home', 'HomeController@tutorHome');
             });
     }
 
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
+    public function map()
     {
-        //
+        $this->mapApiRoutes();
+        $this->mapWebRoutes();
     }
+
+    protected function mapWebRoutes()
+    {
+        Route::middleware('web')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/web.php'));
+    }
+
+    protected function mapApiRoutes()
+    {
+        Route::prefix('api')
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/api.php'));
+    }
+
+    protected $middleware = [
+        // Other middleware
+        \App\Http\Middleware\CorsMiddleware::class,
+    ];
 }

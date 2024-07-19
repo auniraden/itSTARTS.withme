@@ -28,7 +28,7 @@ function ItStartsRoles() {
     else if (role === "tutor") {
       navigate("/sign-up-tutor");
     } else {
-      axios.post('/api/select-role', { role })
+      axios.post('http://127.0.0.1:8000/select-role', { role })
         .then(response => {
           const data = response.data;
           if (data.redirect) {
