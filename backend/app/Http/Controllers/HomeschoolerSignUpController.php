@@ -36,9 +36,14 @@ class HomeschoolerSignUpController extends Controller
 
         $user->sendEmailVerificationNotification();
 
+        $token = $user->createToken('auth_token')->plainTextToken;
+
         return response()->json([
+            'user' => $user,
+            'token' => $token,
             'success' => true,
             'message' => 'You have registered successfully! Please check your email for verification link.',
         ], 201);
+
     }
 }

@@ -80,6 +80,18 @@ function SignUpHomeschooler() {
     }
   };
 
+  React.useEffect(() => {
+    document.body.classList.add("sign-up-homeschooler");
+    document.body.classList.add("sidebar-collapse");
+    document.documentElement.classList.remove("nav-open");
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    return function cleanup() {
+      document.body.classList.remove("sign-up-homeschooler");
+      document.body.classList.remove("sidebar-collapse");
+    };
+  }, []);
+
   return (
     <>
       <SignupNavbar />
@@ -94,7 +106,7 @@ function SignUpHomeschooler() {
       >
         <Container>
           <Row>
-            <Card className="card-signup" data-background-color="F7F0EB">
+            <Card className="card-signup" data-background-color="#F7F0EB">
               <Form onSubmit={handleSubmit} className="form">
                 <div className="col-12 text-center mb-4">
                   <img

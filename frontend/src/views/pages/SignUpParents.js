@@ -72,7 +72,7 @@ function SignUpParents() {
             </InputGroupText>
           </InputGroupAddon>
           <Input
-            placeholder={`My kid ${i + 1}'s email address`}
+            placeholder={`My kid ${i}'s email address`}
             type="email"
             style={{ color: "#232D22" }}
             value={kidEmails[i]}
@@ -99,6 +99,18 @@ function SignUpParents() {
       console.error("Woops! There's some problem to get you registered. Please try again in a moment.", error);
     }
   };
+
+  React.useEffect(() => {
+    document.body.classList.add("sign-up-parents");
+    document.body.classList.add("sidebar-collapse");
+    document.documentElement.classList.remove("nav-open");
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    return function cleanup() {
+      document.body.classList.remove("sign-up-parents");
+      document.body.classList.remove("sidebar-collapse");
+    };
+  }, []);
 
   return (
     <>

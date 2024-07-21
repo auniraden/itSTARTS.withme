@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom"; // for navigation
 import axios from "axios";
+import { Link } from "react-router-dom";
 import {
   Button,
   Card,
@@ -9,7 +10,8 @@ import {
   CardTitle,
   Container,
   Row,
-  Col
+  Col,
+  CardFooter
 } from "reactstrap";
 import SignupNavbar from "components/Navbars/SignupNavbar";
 
@@ -40,6 +42,18 @@ function ItStartsRoles() {
         });
     }
   };
+
+  React.useEffect(() => {
+    document.body.classList.add("it-starts-roles");
+    document.body.classList.add("sidebar-collapse");
+    document.documentElement.classList.remove("nav-open");
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    return function cleanup() {
+      document.body.classList.remove("it-starts-roles");
+      document.body.classList.remove("sidebar-collapse");
+    };
+  }, []);
 
   return (
     <>
@@ -95,10 +109,20 @@ function ItStartsRoles() {
                 >
                   Tutors
                 </Button>
-                <p className="mt-4" style={{ color: "#232D22" }}>
-                  Have an account? <a href="#" style={{ color: "#232D22" }}>Sign in here!</a>
-                </p>
               </CardBody>
+              <CardFooter>
+                <Row>
+                  <Col className="text-center">
+                    <Link
+                      className="link"
+                      to="/login"
+                      style={{ color: "#FE4632", fontSize:"0.7rem"}}
+                    >
+                    Psstt... Sign in here if you have an account!
+                  </Link>
+                  </Col>
+                </Row>
+              </CardFooter>
             </Card>
           </Col>
         </Row>

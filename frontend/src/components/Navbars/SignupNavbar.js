@@ -119,16 +119,16 @@ function SignupNavbar() {
                 </UncontrolledDropdown>
               </NavItem>
               <NavItem>
-                <Button
-                  className="nav-link btn-neutral"
-                  color="white"
-                  href="#pablo"
-                  id="sign-in"
-                  target="_blank"
-                >
-                  <i className="now-ui-icons arrows-1_share-66 mr-1"></i>
-                  <p id="sign-in">SIGN-IN</p>
-                </Button>
+              <Link  to="/login">
+                    <Button
+                        className="nav-link btn-neutral"
+                        color="white"
+                        id="sign-in"
+                    >
+                    <i className="now-ui-icons arrows-1_share-66 mr-1"></i>
+                    <p id="sign-in">SIGN-IN</p>
+                    </Button>
+                </Link>
                 <UncontrolledTooltip placement="bottom"target="sign-in">
                   Have an account? Sign in here!
                 </UncontrolledTooltip>
