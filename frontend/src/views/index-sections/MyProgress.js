@@ -11,7 +11,7 @@ import {
 
 function MyProgress(){
     return(
-        <Container>
+        <Container className="content-wrapper">
         <div style={{backGroundColor:'white'}}>
             <div>
               <h1 style={{ fontSize: "3rem", color: "#232D22", letterSpacing: "0.01rem", margin: "25px", marginLeft:'7px'}}>My progress</h1>

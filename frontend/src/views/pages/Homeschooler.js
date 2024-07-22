@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
-  Button,
   Badge,
   Container,
   Row,
@@ -15,7 +13,7 @@ import MySchedule from "views/index-sections/MySchedule";
 import MyProgress from "views/index-sections/MyProgress";
 import FocusZone from "views/index-sections/FocusZone";
 import ToMeLetter from "views/index-sections/ToMeLetter";
-import thisFooterMain from "components/Footers/thisFooterMain";
+import ThisFooterMain from "components/Footers/ThisFooterMain";
 
 function Homeschooler() {
   const [activeTab, setActiveTab] = useState('playground');
@@ -27,7 +25,6 @@ function Homeschooler() {
       case 'letsDoThis':
         return <LetsDoThis />;
       case 'saveResources':
-        // You'll need to create this component
         return <SaveResources/>;
       default:
         return null;
@@ -110,9 +107,11 @@ function Homeschooler() {
         <FocusZone/>
         <div style={{margin:'50px'}}></div>
         <ToMeLetter/>
-        <div style={{margin:'50px'}}></div>
-        <thisFooterMain/>
       </div>
+      <div>
+      <ThisFooterMain/>
+      </div>
+
     </>
   );
 }
