@@ -25,13 +25,16 @@ import {
 import SignupNavbar from "components/Navbars/SignupNavbar";
 
 axios.defaults.baseURL = 'http://127.0.0.1:8000'; // Adjust if your API base URL is different
-axios.defaults.withCredentials = true;
 
+
+//Function to fetch CSRF token and set up Axios
 const setCsrfToken = async () => {
   try {
-    await axios.get("/sanctum/csrf-cookie"); // Ensure this endpoint is correct for CSRF
+    const response = await axios.get('http://127.0.0.1:8000/csrf-token');
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = response.data.token;
+    axios.defaults.withCredentials = true; // Include credentials with requests
   } catch (error) {
-    console.error("Error fetching CSRF token:", error);
+    console.error('Error fetching CSRF token:', error);
   }
 };
 

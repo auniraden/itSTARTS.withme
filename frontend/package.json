@@ -1,6 +1,7 @@
 {
   "name": "itstarts",
   "version": "1.5.2",
+  "proxy": "http://127.0.0.1:8000",
   "private": true,
   "dependencies": {
     "ajv": "^8.17.1",
