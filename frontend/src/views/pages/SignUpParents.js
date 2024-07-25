@@ -101,7 +101,7 @@ function SignUpParents() {
       await setCsrfToken();
 
       // Make the POST request with CSRF token included
-      const response = await axios.post('/register/parent', {
+      const response = await axios.post('/api/register/parent', {
         ...parentDetails,
         selectedCurriculum,
         kidEmails,

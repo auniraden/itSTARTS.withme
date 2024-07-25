@@ -60,7 +60,7 @@ function SignUpHomeschooler() {
       await setCsrfToken();
 
       // Make the POST request with CSRF token included
-      const response = await axios.post('/register/homeschooler', {
+      const response = await axios.post('/api/register/homeschooler', {
         first_name: firstName,
         last_name: lastName,
         email,
@@ -72,12 +72,15 @@ function SignUpHomeschooler() {
       if (error.response) {
         // Server responded with a status other than 2xx
         console.error("Error response data:", error.response.data);
+        alert(`Registration failed: ${error.response.data.error || 'Unknown error'}`);
       } else if (error.request) {
         // Request was made but no response was received
         console.error("No response received from the server.");
+        alert('No response received from the server.');
       } else {
         // Something else happened
         console.error("Error message:", error.message);
+        alert(`Error: ${error.message}`);
       }
     }
   };
@@ -203,9 +206,9 @@ function SignUpHomeschooler() {
                             <input
                               type="radio"
                               name="curriculum"
-                              value="SPM"
+                              value="1"
                               onChange={handleCurriculumChange}
-                              checked={selectedCurriculum === "SPM"}
+                              checked={selectedCurriculum === "1"}
                               style={{ marginRight: "10px" }}
                             />{" "}
                             Lembaga Peperiksaan Malaysia Sijil Pelajaran Malaysia (SPM)
@@ -214,9 +217,9 @@ function SignUpHomeschooler() {
                             <input
                               type="radio"
                               name="curriculum"
-                              value="Cambridge IGCSE"
+                              value="2"
                               onChange={handleCurriculumChange}
-                              checked={selectedCurriculum === "Cambridge IGCSE"}
+                              checked={selectedCurriculum === "2"}
                               style={{ marginRight: "10px" }}
                             />{" "}
                             Cambridge Assessment International Education (IGCSE)
@@ -225,9 +228,9 @@ function SignUpHomeschooler() {
                             <input
                               type="radio"
                               name="curriculum"
-                              value="Pearson IGCSE"
+                              value="3"
                               onChange={handleCurriculumChange}
-                              checked={selectedCurriculum === "Pearson IGCSE"}
+                              checked={selectedCurriculum === "3"}
                               style={{ marginRight: "10px" }}
                             />{" "}
                             Pearson Edexcel (IGCSE)
@@ -236,9 +239,9 @@ function SignUpHomeschooler() {
                             <input
                               type="radio"
                               name="curriculum"
-                              value="AQA IGCSE"
+                              value="4"
                               onChange={handleCurriculumChange}
-                              checked={selectedCurriculum === "AQA IGCSE"}
+                              checked={selectedCurriculum === "4"}
                               style={{ marginRight: "10px" }}
                             />{" "}
                             Oxford AQA (IGCSE)

@@ -10,6 +10,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Log;
 
 class RegistrationConfirmation extends Mailable
 {
@@ -28,12 +29,22 @@ class RegistrationConfirmation extends Mailable
     }
 
     protected function createVerificationUrl($user)
-{
-    $expires = Carbon::now()->addMinutes(60); // Link valid for 60 minutes
-    return URL::temporarySignedRoute(
-        'verification.verify', $expires, ['user' => $user->id]
-    );
-}
+    {
+        $expires = Carbon::now()->addMinutes(60); // Link valid for 60 minutes
+        $token = sha1($user->email); // Assign a value to the $token variable
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            $expires,
+            [
+                'id' => $user->id,
+                'token' => $token
+            ]
+        );
+        Log::info('Generated verification URL:', ['url' => $verificationUrl]);
+
+        return $verificationUrl;
+
+    }
 
     /**
      * Get the message envelope.

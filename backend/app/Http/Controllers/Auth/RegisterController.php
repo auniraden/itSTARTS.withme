@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationConfirmation;
 use App\Models\Role;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 
 class RegisterController extends Controller
 {
@@ -24,11 +25,17 @@ class RegisterController extends Controller
         ]);
 
         try {
+            $role = Role::firstOrCreate(['role_name' => 'homeschooler']);
+
+            // Ensure $role is an object
+            if (!is_object($role)) {
+                throw new \Exception('Failed to create or retrieve the role.');
+            }
             $user = User::create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
-                'role_id' => $this->roleIdFor('homeschooler'),
+                'role_id' => $role->id,
                 'curriculum_id' => $request->curriculum_id,
             ]);
 
@@ -37,6 +44,7 @@ class RegisterController extends Controller
 
             return response()->json(['message' => 'Registration successful, please check your email for confirmation.']);
         } catch (\Exception $e) {
+            Log::error('Registration failed: ' . $e->getMessage());
             return response()->json(['error' => 'Registration failed.'], 500);
         }
     }
@@ -54,11 +62,17 @@ class RegisterController extends Controller
         ]);
 
         try {
+            $role = Role::firstOrCreate(['role_name' => 'parents']);
+            // Ensure $role is an object
+            if (!is_object($role)) {
+                throw new \Exception('Failed to create or retrieve the role.');
+            }
+
             $user = User::create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
-                'role_id' => $this->roleIdFor('parent'),
+                'role_id' => $role->id,
                 'curriculum_id' => $request->curriculum_id,
             ]);
 
@@ -77,6 +91,7 @@ class RegisterController extends Controller
 
             return response()->json(['message' => 'Registration successful, please check your email for confirmation.']);
         } catch (\Exception $e) {
+            Log::error('Registration failed: ' . $e->getMessage());
             return response()->json(['error' => 'Registration failed.'], 500);
         }
     }
@@ -96,11 +111,16 @@ class RegisterController extends Controller
         ]);
 
         try {
+            $role = Role::firstOrCreate(['role_name' => 'tutor']);
+             // Ensure $role is an object
+            if (!is_object($role)) {
+                throw new \Exception('Failed to create or retrieve the role.');
+            }
             $user = User::create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
-                'role_id' => $this->roleIdFor('tutor'),
+                'role_id' => $role->id,
                 'curriculum_id' => $request->curriculum_id,
                 'class_type' => $request->class_type,
                 'rate_per_hour' => $request->rate_per_hour,
@@ -119,6 +139,7 @@ class RegisterController extends Controller
 
             return response()->json(['message' => 'Registration successful, please check your email for confirmation.']);
         } catch (\Exception $e) {
+            Log::error('Registration failed: ' . $e->getMessage());
             return response()->json(['error' => 'Registration failed.'], 500);
         }
     }
@@ -126,6 +147,11 @@ class RegisterController extends Controller
     // Helper method to get role ID based on role name
     private function roleIdFor($roleName)
     {
-        return Role::where('name', $roleName)->firstOrFail()->id;
+        $role = Role::where('role_name', $roleName)->firstOrFail()->id;
+        if (!$role) {
+            Log::error("Role '{$roleName}' not found.");
+            throw new \Exception("Role '{$roleName}' not found.");
+        }
+        return $role->id;
     }
 }

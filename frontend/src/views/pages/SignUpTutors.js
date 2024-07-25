@@ -123,7 +123,7 @@ function SignUpTutor() {
     });
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/register/tutor", formData, {
+      const response = await axios.post("http://127.0.0.1:8000/api/register/tutor", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')

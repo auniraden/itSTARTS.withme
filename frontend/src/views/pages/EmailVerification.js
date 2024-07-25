@@ -11,12 +11,12 @@ function EmailVerification() {
             try {
                 await axios.get(`http://127.0.0.1:8000/api/email/verify/${userId}`, { params: { token } });
                 // Redirect based on user role or display success message
-                navigate.push('/index'); // Adjust redirection as needed
+                navigate('/index'); // Adjust redirection as needed
             } catch (error) {
                 // Handle error
                 console.error('Verification failed:', error);
                 // Optionally redirect to an error page or display a message
-                navigate.push('/verification-failed'); // Example redirect
+                navigate('/verification-failed'); // Example redirect
             }
         };
 
