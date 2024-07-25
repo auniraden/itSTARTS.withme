@@ -28,6 +28,16 @@ import {
 import SignupNavbar from "components/Navbars/SignupNavbar";
 
 axios.defaults.baseURL = 'http://127.0.0.1:8000';
+axios.defaults.withCredentials = true;
+
+const setCsrfToken = async () => {
+  try {
+    await axios.get("/sanctum/csrf-cookie"); // Ensure this endpoint is correct for CSRF
+  } catch (error) {
+    console.error("Error fetching CSRF token:", error);
+  }
+};
+
 function SignUpTutor() {
   const [firstFocus, setFirstFocus] = React.useState(false);
   const [lastFocus, setLastFocus] = React.useState(false);
@@ -95,23 +105,30 @@ function SignUpTutor() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    await setCsrfToken(); // Fetch CSRF token before making the POST request
+
     const formData = new FormData();
-    formData.append("firstName", firstName);
-    formData.append("lastName", lastName);
+    formData.append("first_name", firstName);
+    formData.append("last_name", lastName);
     formData.append("email", email);
-    formData.append("curriculum", selectedCurriculum);
-    formData.append("ratePerHour", ratePerHour);
-    formData.append("classType", selectedClassType);
+    formData.append("curriculum_id", selectedCurriculum);
+    formData.append("rate_per_hour", ratePerHour);
+    formData.append("class_type", selectedClassType);
+    formData.append("max_students", maxStudents);
+
     files.forEach((file, index) => {
-      formData.append(`file_${index}`, file);
+      formData.append(`qualifications[${index}]`, file);
     });
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/tutor/register", formData, {
+      const response = await axios.post("http://127.0.0.1:8000/register/tutor", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
       });
+
       if (response.status === 200) {
         // Handle successful registration
         console.log("Great! You're in!", response.data);

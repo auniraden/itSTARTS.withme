@@ -20,27 +20,17 @@ function ItStartsRoles() {
 
   // This function is to handle navigation based on role selection
   const handleRoleSelection = (role) => {
-    // Handling different roles and navigating to specific routes
-    if (role === "homeschooler") {
-      navigate("/sign-up-homeschooler");
-    }
-    else if (role === "parents") {
-      navigate("/sign-up-parents");
-    }
-    else if (role === "tutor") {
-      navigate("/sign-up-tutor");
-    } else {
-      axios.post('http://127.0.0.1:8000/select-role', { role })
-        .then(response => {
-          const data = response.data;
-          if (data.redirect) {
-            navigate(data.redirect); // Redirect to the URL sent by the backend
-          }
-        })
-        .catch(error => {
-          console.error('Error selecting role:', error);
-        });
-    }
+    // Send the selected role to the backend
+    axios.post('http://127.0.0.1:8000/api/select-role', { role })
+      .then(response => {
+        const data = response.data;
+        if (data.redirect) {
+          navigate(data.redirect); // Redirect to the URL sent by the backend
+        }
+      })
+      .catch(error => {
+        console.error('Error selecting role:', error);
+      });
   };
 
   React.useEffect(() => {
@@ -91,7 +81,6 @@ function ItStartsRoles() {
                   className="btn-round btn-lg mb-3 btn-primary"
                   block
                   onClick={() => handleRoleSelection("homeschooler")}
-                  href=""
                 >
                   ME: The Homeschooler
                 </Button>

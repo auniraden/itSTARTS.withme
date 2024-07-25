@@ -1,34 +1,35 @@
 <?php
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeschoolerSignUpController;
-use App\Http\Controllers\ParentSignUpController;
-use App\Http\Controllers\TutorSignUpController;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\RoleSelectionController;
-use App\Http\Controllers\ResourceController;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\Auth\LoginController;
+
+Route::middleware([
+    EnsureFrontendRequestsAreStateful::class,
+    'throttle:api',
+    \Illuminate\Routing\Middleware\SubstituteBindings::class,
+    ])->group(function () {
+        Route::post('/register/homeschooler', [RegisterController::class, 'registerHomeschooler']);
+        Route::post('/register/parent', [RegisterController::class, 'registerParent']);
+        Route::post('/register/tutor', [RegisterController::class, 'registerTutor']);
+        Route::post('/select-role', [RoleSelectionController::class, 'selectRole']);
+});
+
+Route::get('/email/verify/{id}/{token}', [VerificationController::class, 'verify'])
+    ->name('verification.verify');
+
+Route::post('/login', [LoginController::class, 'login']);
+Route::get('/login/confirm/{token}', [LoginController::class, 'confirmLogin'])->name('login.confirm');
 
 
 
-Route::get('/user', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
-})->middleware('auth:sanctum');
+});
 
-// // Homeschooler Sign Up
-// Route::post('/homeschooler/register', [HomeschoolerSignUpController::class, 'register']);
-
-// // Parent Sign Up
-// Route::post('/parent/register', [ParentSignUpController::class, 'register']);
-
-// // Tutor Sign Up
-// Route::post('/tutor/register', [TutorSignUpController::class, 'register']);
-
-
-// Route::post('/select-role', [RoleSelectionController::class, 'selectRole']);
-
-//Add more routes as needed for your application
-Route::middleware('auth:api')->get('/tasks', 'ClassroomController@tasks');
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/resources', [ResourceController::class, 'index']);
-    Route::post('/resources', [ResourceController::class, 'store']);
+Route::get('/example', function () {
+    return response()->json(['message' => 'API route is working']);
 });

@@ -24,12 +24,12 @@ import {
 } from "reactstrap";
 import SignupNavbar from "components/Navbars/SignupNavbar";
 
-axios.defaults.baseURL = 'http://127.0.0.1:8000';
+axios.defaults.baseURL = 'http://127.0.0.1:8000'; // Adjust if your API base URL is different
 axios.defaults.withCredentials = true;
 
 const setCsrfToken = async () => {
   try {
-    await axios.get("/sanctum/csrf-cookie");
+    await axios.get("/sanctum/csrf-cookie"); // Ensure this endpoint is correct for CSRF
   } catch (error) {
     console.error("Error fetching CSRF token:", error);
   }
@@ -57,7 +57,7 @@ function SignUpHomeschooler() {
       await setCsrfToken();
 
       // Make the POST request with CSRF token included
-      const response = await axios.post('/homeschooler/register', {
+      const response = await axios.post('/register/homeschooler', {
         first_name: firstName,
         last_name: lastName,
         email,
@@ -65,7 +65,6 @@ function SignUpHomeschooler() {
       });
 
       console.log("Great! You're in!", response.data);
-      navigate('/verification-notice');
     } catch (error) {
       if (error.response) {
         // Server responded with a status other than 2xx

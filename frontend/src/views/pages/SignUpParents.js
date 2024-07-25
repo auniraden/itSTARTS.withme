@@ -24,6 +24,15 @@ import SignupNavbar from "components/Navbars/SignupNavbar";
 
 
 axios.defaults.baseURL = 'http://127.0.0.1:8000';
+axios.defaults.withCredentials = true;
+
+const setCsrfToken = async () => {
+  try {
+    await axios.get("/sanctum/csrf-cookie"); // Ensure this endpoint is correct for CSRF
+  } catch (error) {
+    console.error("Error fetching CSRF token:", error);
+  }
+};
 
 function SignUpParents() {
   const [firstFocus, setFirstFocus] = useState(false);
@@ -87,16 +96,24 @@ function SignUpParents() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:8000/parent/register', {
+      // Ensure CSRF token is set
+      await setCsrfToken();
+
+      // Make the POST request with CSRF token included
+      const response = await axios.post('/register/parent', {
         ...parentDetails,
         selectedCurriculum,
         kidEmails,
       });
-      // Handle successful registration
       console.log("Great! You're in!", response.data);
     } catch (error) {
-      // Handle registration error
-      console.error("Woops! There's some problem to get you registered. Please try again in a moment.", error);
+      if (error.response) {
+        console.error("Error response data:", error.response.data);
+      } else if (error.request) {
+        console.error("No response received from the server.");
+      } else {
+        console.error("Error message:", error.message);
+      }
     }
   };
 

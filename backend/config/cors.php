@@ -1,12 +1,19 @@
 <?php
 
 return [
-    'paths' => ['api/*','sanctum/csrf-cookie'],
+    'paths' => ['*'],
+
     'allowed_methods' => ['*'],
-    'allowed_origins' => ['http://localhost:3000'], // Adjust to your frontend URL
+
+    'allowed_origins' => explode(',', env('FRONTEND_URLS')),
+
     'allowed_origins_patterns' => [],
+
     'allowed_headers' => ['*'],
+
     'exposed_headers' => [],
+
     'max_age' => 0,
+
     'supports_credentials' => true,
 ];

@@ -18,6 +18,9 @@ import SignUpParents from "views/pages/SignUpParents";
 import SignUpTutor from "views/pages/SignUpTutors";
 import Login from "views/pages/Login";
 import Homeschooler from "views/pages/Homeschooler";
+import EmailVerification from "views/pages/EmailVerification";
+import ParentsHome from "views/pages/ParentsHome";
+import TutorHome from "views/pages/TutorHome";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -34,6 +37,10 @@ root.render(
       <Route path="/sign-up-tutor" element={<SignUpTutor />} />
       <Route path="/login" element={<Login />} />
       <Route path="/homeschooler" element={<Homeschooler />} />
+      <Route path="/email/verify/:userId/:token" element={<EmailVerification />} />
+      <Route path="/parents-home" element={<ParentsHome />} />
+      <Route path="/tutor-home" element={<TutorHome />} />
+
 
       <Route path="*" element={<Navigate to="/index" replace />} />
     </Routes>
