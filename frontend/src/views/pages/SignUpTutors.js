@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // reactstrap components
 import {
@@ -40,6 +41,7 @@ const setCsrfToken = async () => {
 };
 
 function SignUpTutor() {
+  const navigate = useNavigate();
   const [firstFocus, setFirstFocus] = React.useState(false);
   const [lastFocus, setLastFocus] = React.useState(false);
   const [emailFocus, setEmailFocus] = React.useState(false);
@@ -81,12 +83,35 @@ function SignUpTutor() {
   };
 
   const handleCurriculumChange = (e) => {
-    setSelectedCurriculum(e.target.value);
+    setSelectedCurriculum(parseInt(e.target.value, 10));
+  };
+  const getCurriculumName = (id) => {
+    switch (id) {
+      case 1: return "SPM";
+      case 2: return "Cambridge IGCSE";
+      case 3: return "Pearson IGCSE";
+      case 4: return "AQA IGCSE";
+      default: return "Select Curriculum";
+    }
+  };
+
+  const classTypeMapping = {
+    'One-to-one': 'one_to_one',
+    'Group': 'group',
+    'Both': 'both'
+  };
+
+  const reverseClassTypeMapping = {
+    'one_to_one': 'One-to-one',
+    'group': 'Group',
+    'both': 'Both'
   };
   const handleClassTypeChange = (e) => {
-    setSelectedClassType(e.target.value);
-    if (e.target.value === "group" || "both") {
-      setMaxStudents("");
+    const uiValue = e.target.value;
+    const backendValue = classTypeMapping[uiValue];
+    setSelectedClassType(backendValue);
+    if (backendValue === "one_to_one") {
+      setMaxStudents(""); // Clear max_students when one-to-one is selected
     }
   };
   const handleMaxStudentsChange = (e) => {
@@ -106,6 +131,16 @@ function SignUpTutor() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Client-side validation
+    if (!firstName || !lastName || !email || !selectedCurriculum || !ratePerHour || !selectedClassType) {
+      setAlertMessage("Please fill in all required fields.");
+      return;
+    }
+
+    if ((selectedClassType === 'group' || selectedClassType === 'both') && !maxStudents) {
+      setAlertMessage("Please enter the maximum number of students for group sessions.");
+      return;
+    }
 
     await setCsrfToken(); // Fetch CSRF token before making the POST request
 
@@ -116,14 +151,18 @@ function SignUpTutor() {
     formData.append("curriculum_id", selectedCurriculum);
     formData.append("rate_per_hour", ratePerHour);
     formData.append("class_type", selectedClassType);
-    formData.append("max_students", maxStudents);
+
+    // Only append max_students if the class type is 'group' or 'both'
+    if (selectedClassType === 'group' || selectedClassType === 'both') {
+      formData.append("max_students", maxStudents);
+    }
 
     files.forEach((file, index) => {
       formData.append(`qualifications[${index}]`, file);
     });
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/register/tutor", formData, {
+      const response = await axios.post("/api/register/tutor", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -132,10 +171,23 @@ function SignUpTutor() {
 
       if (response.status === 200) {
         // Handle successful registration
+        navigate('/registration-success');
         console.log("Great! You're in!", response.data);
       }
     } catch (error) {
-      console.error("Woops! There's some problem to get you registered. Please try again in a moment.", error);
+      if (error.response) {
+        // Server responded with a status other than 2xx
+        console.error("Error response data:", error.response.data);
+        alert(`Registration failed: ${error.response.data.error || 'Unknown error'}`);
+      } else if (error.request) {
+        // Request was made but no response was received
+        console.error("No response received from the server.");
+        alert('No response received from the server.');
+      } else {
+        // Something else happened
+        console.error("Error message:", error.message);
+        alert(`Error: ${error.message}`);
+      }
     }
   };
 
@@ -253,16 +305,16 @@ function SignUpTutor() {
                         type="button"
                         style={{ marginLeft: "20px", backgroundColor: "#F7F0EB", color: "#232D22", borderRadius:"50px" }}
                       >
-                        {selectedCurriculum ? selectedCurriculum : "Select Curriculum"}
+                        {selectedCurriculum ? getCurriculumName(selectedCurriculum) : "Select Curriculum"}
                       </DropdownToggle>
                       <DropdownMenu aria-labelledby="dropdownMenuButtonC">
                         <DropdownItem toggle={false}>
                           <input
                             type="radio"
                             name="curriculum"
-                            value="SPM"
+                            value="1"
                             onChange={handleCurriculumChange}
-                            checked={selectedCurriculum === "SPM"}
+                            checked={selectedCurriculum === "1"}
                             style={{ marginRight: "10px" }}
                           />{" "}
                           Lembaga Peperiksaan Malaysia Sijil Pelajaran Malaysia (SPM)
@@ -271,9 +323,9 @@ function SignUpTutor() {
                           <input
                             type="radio"
                             name="curriculum"
-                            value="Cambridge IGCSE"
+                            value="2"
                             onChange={handleCurriculumChange}
-                            checked={selectedCurriculum === "Cambridge IGCSE"}
+                            checked={selectedCurriculum === "2"}
                             style={{ marginRight: "10px" }}
                           />{" "}
                           Cambridge Assessment International Education (IGCSE)
@@ -282,9 +334,9 @@ function SignUpTutor() {
                           <input
                             type="radio"
                             name="curriculum"
-                            value="Pearson IGCSE"
+                            value="3"
                             onChange={handleCurriculumChange}
-                            checked={selectedCurriculum === "Pearson IGCSE"}
+                            checked={selectedCurriculum === "3"}
                             style={{ marginRight: "10px" }}
                           />{" "}
                           Pearson Edexcel (IGCSE)
@@ -293,9 +345,9 @@ function SignUpTutor() {
                           <input
                             type="radio"
                             name="curriculum"
-                            value="AQA IGCSE"
+                            value="4"
                             onChange={handleCurriculumChange}
-                            checked={selectedCurriculum === "AQA IGCSE"}
+                            checked={selectedCurriculum === "4"}
                             style={{ marginRight: "10px" }}
                           />{" "}
                           Oxford AQA (IGCSE)
@@ -318,7 +370,7 @@ function SignUpTutor() {
                         type="button"
                         style={{ marginLeft: "20px", backgroundColor: "#F7F0EB", color: "#232D22", borderRadius:"50px"}}
                       >
-                        {selectedClassType ? selectedClassType : "Select Class Type"}
+                        {selectedClassType ? reverseClassTypeMapping[selectedClassType] : "Select Class Type"}
                       </DropdownToggle>
                         <DropdownMenu aria-labelledby="dropdownMenuButtonClassType">
                           <DropdownItem toggle={false}>
@@ -327,7 +379,7 @@ function SignUpTutor() {
                             name="classType"
                             value="One-to-one"
                             onChange={handleClassTypeChange}
-                            checked={selectedClassType === "One-to-one"}
+                            checked={selectedClassType === "one_to_one"}
                             style={{ marginRight: "10px" }}
                           />{" "}
                             One-to-one
@@ -338,7 +390,7 @@ function SignUpTutor() {
                             name="classType"
                             value="Group"
                             onChange={handleClassTypeChange}
-                            checked={selectedClassType === "Group"}
+                            checked={selectedClassType === "group"}
                             style={{ marginRight: "10px" }}
                           />{" "}
                             Group
@@ -349,14 +401,14 @@ function SignUpTutor() {
                             name="classType"
                             value="Both"
                             onChange={handleClassTypeChange}
-                            checked={selectedClassType === "Both"}
+                            checked={selectedClassType === "both"}
                             style={{ marginRight: "10px" }}
                           />{" "}
                             Both
                           </DropdownItem>
                         </DropdownMenu>
                     </UncontrolledDropdown>
-                    {(selectedClassType === "Group" || selectedClassType === "Both") && (
+                    {(selectedClassType === "group" || selectedClassType === "both") && (
                       <FormGroup className="ml-3">
                         <Label for="maxStudents">Maximum students per session:</Label>
                           <Input
@@ -367,6 +419,7 @@ function SignUpTutor() {
                             value={maxStudents}
                             onChange={handleMaxStudentsChange}
                             min="1"
+                            required
                             style={{color: '#232D22', marginLeft:"20px"}}
 
                           />

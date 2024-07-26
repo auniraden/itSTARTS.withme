@@ -36,27 +36,29 @@ class LoginConfirmation extends Mailable
      * Get the message content definition.
      */
     public function content()
-    {
-        $homeUrl = $this->determineHomeUrl($this->user);
-        $loginUrl = url("/api/login/confirm/{$this->user->login_token}");
+{
+    $loginUrl = url("/api/login/confirm/{$this->user->login_token}");
 
-        return $this->view('emails.login_confirmation')
-                    ->with([
-                        'name' => $this->user->first_name . ' ' . $this->user->last_name,
-                        'homeUrl' => $homeUrl,
-                        'loginUrl' => $loginUrl,
-                    ]);
-    }
+    return new Content(
+        view: 'emails.login_confirmation',
+        with: [
+            'name' => $this->user->first_name . ' ' . $this->user->last_name,
+            'loginUrl' => $loginUrl,
+        ],
+        text: false
+    );
+}
 
     private function determineHomeUrl($user)
     {
+        $frontendBaseUrl = 'http://127.0.0.1:3000';
         $roleHomeUrls = [
             'homeschooler' => '/homeschooler',
             'parents' => '/parents-home',
             'tutor' => '/tutor-home',
         ];
 
-        return url($roleHomeUrls[$user->role->name] ?? '/');
+        return $frontendBaseUrl . ($roleHomeUrls[$user->role->name] ?? '/');
     }
     /**
      * Get the attachments for the message.

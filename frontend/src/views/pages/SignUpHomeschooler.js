@@ -66,7 +66,8 @@ function SignUpHomeschooler() {
         email,
         curriculum_id: selectedCurriculum,
       });
-
+      // If successful, redirect to the RegistrationSuccess page
+      navigate('/registration-success');
       console.log("Great! You're in!", response.data);
     } catch (error) {
       if (error.response) {

@@ -18,9 +18,12 @@ import SignUpParents from "views/pages/SignUpParents";
 import SignUpTutor from "views/pages/SignUpTutors";
 import Login from "views/pages/Login";
 import Homeschooler from "views/pages/Homeschooler";
-import EmailVerification from "views/pages/EmailVerification";
+import EmailVerification from "views/index-sections/EmailVerification";
 import ParentsHome from "views/pages/ParentsHome";
 import TutorHome from "views/pages/TutorHome";
+import RegistrationSuccess from "views/index-sections/RegistrationSuccess";
+import LoginSuccess from "views/index-sections/LoginSuccess";
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -40,6 +43,8 @@ root.render(
       <Route path="/email/verify/:userId/:token" element={<EmailVerification />} />
       <Route path="/parents-home" element={<ParentsHome />} />
       <Route path="/tutor-home" element={<TutorHome />} />
+      <Route path="/registration-success" element={<RegistrationSuccess />} />
+      <Route path="/login-success" element={<LoginSuccess />} />
 
 
       <Route path="*" element={<Navigate to="/index" replace />} />

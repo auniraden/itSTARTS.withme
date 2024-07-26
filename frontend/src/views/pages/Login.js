@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   Button,
@@ -23,6 +24,7 @@ function Login() {
   const [email, setEmail] = useState('');
   const [emailFocus, setEmailFocus] = useState(false);
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     document.body.classList.add("login-page");
@@ -40,6 +42,8 @@ function Login() {
     e.preventDefault();
     try {
         const response = await axios.post('http://127.0.0.1:8000/api/login', { email });
+        // Handle successful registration
+        navigate('/login-success');
         setMessage('Please check your email for the login link.');
     } catch (error) {
         console.error('Error sending login link:', error);

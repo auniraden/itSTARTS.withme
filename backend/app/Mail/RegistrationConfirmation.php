@@ -61,11 +61,14 @@ class RegistrationConfirmation extends Mailable
      */
     public function content()
     {
-        return $this->view('emails.registration_confirmation')
-        ->with([
-            'name' => $this->user->first_name . ' ' . $this->user->last_name,
-            'verificationUrl' => $this->verificationUrl,
-        ]);
+        return new Content(
+            view: 'emails.registration_confirmation',
+            with: [
+                'name' => $this->user->first_name . ' ' . $this->user->last_name,
+                'verificationUrl' => $this->verificationUrl,
+            ],
+            text: false
+        );
     }
 
     /**

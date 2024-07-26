@@ -1,13 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Registration Confirmation</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registration Confirmation ;)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 5px;
+            padding: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #4a4a4a;
+            text-align: center;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #FE4632;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #888;
+        }
+    </style>
 </head>
 <body>
-    <p>Hi {{ $name }},</p>
-    <p>Thank you for registering with itSTARTS! Click the link below to verify your email address:</p>
-    <a href="{{ $verificationUrl }}">Verify Email Address</a>
-    <p>All the best, and it all starts with you 😉</p>
-    <p>If you did not create an account, no further action is required.</p>
+    <div class="container">
+        <div class="logo">
+
+            <img src="{{ asset('img/itstarts-logo-final.png') }}" alt="itSTARTS Logo" width="150">
+        </div>
+        <h1>Welcome to itSTARTS!</h1>
+        <p>Hi {{ $name }},</p>
+        <p>Thank you for registering with itSTARTS! We're excited to have you on board. To get started, please verify your email address by clicking the button below:</p>
+        <p style="text-align: center;">
+            <a href="{{ $verificationUrl }}" class="button">Verify Email Address</a>
+        </p>
+        <p>All the best because it all starts with you! 😉</p>
+        <p>If you did not create an account, no further action is required.</p>
+        <p>Regards,<br>The itSTARTS Team</p>
+    </div>
+    <div class="footer">
+        <p>&copy; {{ date('Y') }} itSTARTS. All rights reserved.</p>
+    </div>
 </body>
 </html>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   Card,
@@ -36,6 +37,7 @@ const setCsrfToken = async () => {
 };
 
 function SignUpParents() {
+  const navigate = useNavigate();
   const [firstFocus, setFirstFocus] = useState(false);
   const [lastFocus, setLastFocus] = useState(false);
   const [emailFocus, setEmailFocus] = useState(false);
@@ -82,7 +84,7 @@ function SignUpParents() {
             </InputGroupText>
           </InputGroupAddon>
           <Input
-            placeholder={`My kid ${i}'s email address`}
+            placeholder={`My kid ${i + 1}'s email address`}
             type="email"
             style={{ color: "#232D22" }}
             value={kidEmails[i]}
@@ -97,26 +99,40 @@ function SignUpParents() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Ensure CSRF token is set
       await setCsrfToken();
 
-      // Make the POST request with CSRF token included
       const response = await axios.post('/api/register/parent', {
-        ...parentDetails,
-        selectedCurriculum,
-        kidEmails,
+        first_name: parentDetails.firstName,
+        last_name: parentDetails.lastName,
+        email: parentDetails.email,
+        curriculum_id: selectedCurriculum,
+        number_of_kids: numberOfKids,
+        children_emails: kidEmails.filter(email => email !== ""), // Filter out empty emails
       });
-      console.log("Great! You're in!", response.data);
+
+      navigate('/registration-success');
+      console.log("Registration successful!", response.data);
     } catch (error) {
+      console.error("Registration error:", error);
       if (error.response) {
         console.error("Error response data:", error.response.data);
+        if (error.response.data.errors) {
+          // Log validation errors
+          console.error("Validation errors:", error.response.data.errors);
+          alert(`Validation errors: ${JSON.stringify(error.response.data.errors)}`);
+        } else {
+          alert(`Registration failed: ${error.response.data.error || 'Unknown error'}`);
+        }
       } else if (error.request) {
         console.error("No response received from the server.");
+        alert('No response received from the server.');
       } else {
         console.error("Error message:", error.message);
+        alert(`Error: ${error.message}`);
       }
     }
   };
+
 
   React.useEffect(() => {
     document.body.classList.add("sign-up-parents");
@@ -239,9 +255,9 @@ function SignUpParents() {
                           <input
                             type="radio"
                             name="curriculum"
-                            value="SPM"
+                            value="1"
                             onChange={handleCurriculumChange}
-                            checked={selectedCurriculum === "SPM"}
+                            checked={selectedCurriculum === "1"}
                             style={{ marginRight: "10px" }}
                           />{" "}
                           Lembaga Peperiksaan Malaysia Sijil Pelajaran Malaysia (SPM)
@@ -250,9 +266,9 @@ function SignUpParents() {
                           <input
                             type="radio"
                             name="curriculum"
-                            value="Cambridge IGCSE"
+                            value="2"
                             onChange={handleCurriculumChange}
-                            checked={selectedCurriculum === "Cambridge IGCSE"}
+                            checked={selectedCurriculum === "2"}
                             style={{ marginRight: "10px" }}
                           />{" "}
                           Cambridge Assessment International Education (IGCSE)
@@ -261,9 +277,9 @@ function SignUpParents() {
                           <input
                             type="radio"
                             name="curriculum"
-                            value="Pearson IGCSE"
+                            value="3"
                             onChange={handleCurriculumChange}
-                            checked={selectedCurriculum === "Pearson IGCSE"}
+                            checked={selectedCurriculum === "3"}
                             style={{ marginRight: "10px" }}
                           />{" "}
                           Pearson Edexcel (IGCSE)
@@ -272,9 +288,9 @@ function SignUpParents() {
                           <input
                             type="radio"
                             name="curriculum"
-                            value="AQA IGCSE"
+                            value="4"
                             onChange={handleCurriculumChange}
-                            checked={selectedCurriculum === "AQA IGCSE"}
+                            checked={selectedCurriculum === "4"}
                             style={{ marginRight: "10px" }}
                           />{" "}
                           Oxford AQA (IGCSE)

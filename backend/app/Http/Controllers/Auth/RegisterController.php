@@ -51,7 +51,7 @@ class RegisterController extends Controller
 
     public function registerParent(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -76,23 +76,24 @@ class RegisterController extends Controller
                 'curriculum_id' => $request->curriculum_id,
             ]);
 
-            // Store children data
-            if ($request->number_of_kids > 0 && !empty($request->children_emails)) {
-                foreach ($request->children_emails as $childEmail) {
-                    Child::create([
-                        'parent_id' => $user->id,
-                        'email' => $childEmail,
-                    ]);
-                }
-            }
+             // Create children records
+        foreach ($validated['children_emails'] as $childEmail) {
+            Child::create([
+                'parent_id' => $user->id,
+                'email' => $childEmail,
+            ]);
+        }
 
             // Send confirmation email
             Mail::to($user->email)->send(new RegistrationConfirmation($user));
 
             return response()->json(['message' => 'Registration successful, please check your email for confirmation.']);
         } catch (\Exception $e) {
-            Log::error('Registration failed: ' . $e->getMessage());
-            return response()->json(['error' => 'Registration failed.'], 500);
+            Log::error('Registration failed: ' . $e->getMessage(), [
+                'stack' => $e->getTraceAsString(),
+                'request_data' => $request->all(),
+            ]);
+            return response()->json(['error' => 'Registration failed. Please try again or contact support.'], 500);
         }
     }
 
@@ -105,10 +106,17 @@ class RegisterController extends Controller
             'curriculum_id' => 'required|exists:curriculums,id',
             'class_type' => 'required|string|in:one_to_one,group,both',
             'rate_per_hour' => 'required|numeric|min:0',
-            'max_students' => 'required|numeric|min:0',
             'qualifications' => 'required|array',
             'qualifications.*' => 'file|mimes:pdf,doc,docx|max:2048'
         ]);
+
+        // Add conditional validation for max_students
+        $validationRules['max_students'] = [
+            'required_if:class_type,group,both',
+            'numeric',
+            'min:1'
+        ];
+        $request->validate($validationRules);
 
         try {
             $role = Role::firstOrCreate(['role_name' => 'tutor']);
@@ -124,8 +132,14 @@ class RegisterController extends Controller
                 'curriculum_id' => $request->curriculum_id,
                 'class_type' => $request->class_type,
                 'rate_per_hour' => $request->rate_per_hour,
-                'max_students' => $request->max_students,
             ]);
+
+            // Only add max_students to userData if it's provided
+            if ($request->has('max_students')) {
+                $user['max_students'] = $request->max_students;
+            }
+
+            //$user = User::create($userData);
 
             // Handle file uploads for qualifications
             foreach ($request->file('qualifications') as $file) {

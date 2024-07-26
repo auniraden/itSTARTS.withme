@@ -34,14 +34,14 @@ class VerificationController extends Controller
 
         // Determine the user's role and redirect to the appropriate homepage
         $role = $user->role_id;
+        $frontendBaseUrl = 'http://127.0.0.1:3000';
         $redirectUrls = [
             1 => '/homeschooler',
             2 => '/parents-home',
             3 => '/tutor-home',
         ];
 
-        $redirectUrl = $redirectUrls[$role] ?? '/'; // Default to home if role not found
-
-        return redirect($redirectUrl)->with('message', 'Email verified and logged in.');
+        $redirectUrl = $frontendBaseUrl . ($redirectUrls[$role] ?? '/');
+        return redirect()->away($redirectUrl);
     }
 }

@@ -27,7 +27,7 @@ class LoginController extends Controller
             $user->update(['login_token' => $token]);
 
             // Send confirmation email with the link to the respective homepage
-            Mail::to($user->email)->send(new LoginConfirmation($user, $token));
+            Mail::to($user->email)->send(new LoginConfirmation($user));
 
             return response()->json(['message' => 'Login successful, please check your email for confirmation.']);
         }
@@ -41,6 +41,7 @@ class LoginController extends Controller
 
         if ($user) {
             Auth::login($user);
+            $user->update(['login_token' => null]); // Clear the token after use
             return redirect($this->determineHomeUrl($user));
         }
 
@@ -49,12 +50,13 @@ class LoginController extends Controller
 
     private function determineHomeUrl($user)
     {
+        $frontendBaseUrl = 'http://127.0.0.1:3000';
         $roleHomeUrls = [
             'homeschooler' => '/homeschooler',
             'parents' => '/parents-home',
             'tutor' => '/tutor-home',
         ];
 
-        return url($roleHomeUrls[$user->role->name] ?? '/');
+        return $frontendBaseUrl . ($roleHomeUrls[$user->role->name] ?? '/');
     }
 }
