@@ -42,19 +42,21 @@ class LoginController extends Controller
         if ($user) {
             Auth::login($user);
             $user->update(['login_token' => null]); // Clear the token after use
-            return redirect($this->determineHomeUrl($user));
+            $homeUrl = $this->determineHomeUrl($user);
+            // return response()->json(['redirect' => $homeUrl], 200);
+            return redirect()->away($homeUrl);
         }
 
-        return redirect('/login')->withErrors(['token' => 'Invalid or expired token']);
+        return response()->json(['error' => 'Invalid or expired token'], 400);
     }
 
     private function determineHomeUrl($user)
     {
         $frontendBaseUrl = 'http://127.0.0.1:3000';
         $roleHomeUrls = [
-            'homeschooler' => '/homeschooler',
-            'parents' => '/parents-home',
-            'tutor' => '/tutor-home',
+                1 => '/homeschooler',
+                2 => '/parents-home',
+                3 => '/tutor-home',
         ];
 
         return $frontendBaseUrl . ($roleHomeUrls[$user->role->name] ?? '/');

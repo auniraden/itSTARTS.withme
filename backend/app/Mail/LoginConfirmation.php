@@ -53,9 +53,9 @@ class LoginConfirmation extends Mailable
     {
         $frontendBaseUrl = 'http://127.0.0.1:3000';
         $roleHomeUrls = [
-            'homeschooler' => '/homeschooler',
-            'parents' => '/parents-home',
-            'tutor' => '/tutor-home',
+            1 => '/homeschooler',
+            2 => '/parents-home',
+            3 => '/tutor-home',
         ];
 
         return $frontendBaseUrl . ($roleHomeUrls[$user->role->name] ?? '/');

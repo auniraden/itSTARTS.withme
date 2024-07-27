@@ -45,6 +45,7 @@ function SignUpTutor() {
   const [firstFocus, setFirstFocus] = React.useState(false);
   const [lastFocus, setLastFocus] = React.useState(false);
   const [emailFocus, setEmailFocus] = React.useState(false);
+  const [subjectsFocus, setSubjectsFocus] = React.useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -54,6 +55,7 @@ function SignUpTutor() {
   const [alertMessage, setAlertMessage] = useState("");
   const [selectedCurriculum, setSelectedCurriculum] = useState("");
   const [maxStudents, setMaxStudents] = useState("");
+  const [subjects, setSubjects] = useState("");
 
   const handleFileUpload = (e) => {
     const uploadedFiles = Array.from(e.target.files);
@@ -150,6 +152,7 @@ function SignUpTutor() {
     formData.append("email", email);
     formData.append("curriculum_id", selectedCurriculum);
     formData.append("rate_per_hour", ratePerHour);
+    formData.append("subjects", subjects);
     formData.append("class_type", selectedClassType);
 
     // Only append max_students if the class type is 'group' or 'both'
@@ -171,7 +174,7 @@ function SignUpTutor() {
 
       if (response.status === 200) {
         // Handle successful registration
-        navigate('/registration-success');
+        navigate('/waiting-approval');
         console.log("Great! You're in!", response.data);
       }
     } catch (error) {
@@ -442,6 +445,22 @@ function SignUpTutor() {
                       style={{ color: "#232D22" }}
                     ></Input>
                   </InputGroup>
+                  <InputGroup className={"no-border" + (subjectsFocus ? " input-group-focus" : "")}>
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="now-ui-icons education_agenda-bookmark" style={{ color: "#232D22" }}></i>
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                        placeholder="Subjects you'll teach (comma-separated)"
+                        type="text"
+                        value={subjects}
+                        onFocus={() => setSubjectsFocus(true)}
+                        onBlur={() => setSubjectsFocus(false)}
+                        onChange={(e) => setSubjects(e.target.value)}
+                        style={{ color: "#232D22" }}
+                    ></Input>
+                    </InputGroup>
                   <UncontrolledTooltip
                       placement="right"
                       target="qualifications"

@@ -32,6 +32,12 @@ class VerificationController extends Controller
 
         Auth::login($user); // Log the user in
 
+        // Check if the user is a tutor and if they are approved
+        if ($user->role_id === 3 && !$user->is_approved) {
+            Auth::logout();
+            return view('auth.pending-approval'); // Show pending approval page
+        }
+
         // Determine the user's role and redirect to the appropriate homepage
         $role = $user->role_id;
         $frontendBaseUrl = 'http://127.0.0.1:3000';

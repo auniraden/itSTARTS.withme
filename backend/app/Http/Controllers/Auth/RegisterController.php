@@ -12,6 +12,8 @@ use App\Mail\RegistrationConfirmation;
 use App\Models\Role;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
+use App\Models\Subject;
+use App\Models\TutorSubject;
 
 class RegisterController extends Controller
 {
@@ -99,6 +101,7 @@ class RegisterController extends Controller
 
     public function registerTutor(Request $request)
     {
+
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -106,6 +109,7 @@ class RegisterController extends Controller
             'curriculum_id' => 'required|exists:curriculums,id',
             'class_type' => 'required|string|in:one_to_one,group,both',
             'rate_per_hour' => 'required|numeric|min:0',
+            'subjects' => 'required|string',
             'qualifications' => 'required|array',
             'qualifications.*' => 'file|mimes:pdf,doc,docx|max:2048'
         ]);
@@ -132,7 +136,20 @@ class RegisterController extends Controller
                 'curriculum_id' => $request->curriculum_id,
                 'class_type' => $request->class_type,
                 'rate_per_hour' => $request->rate_per_hour,
+                'is_approved' => false, // Initial approval status set to false
+
             ]);
+
+            // Add subjects for the tutor
+            $subjects = explode(',', $request->subjects);
+            foreach ($subjects as $subjectName) {
+                $subject = Subject::firstOrCreate(['name' => trim($subjectName)]);
+                TutorSubject::create([
+                    'tutor_id' => $user->id,
+                    'subject_id' => $subject->id,
+            ]);
+        }
+
 
             // Only add max_students to userData if it's provided
             if ($request->has('max_students')) {
@@ -141,11 +158,10 @@ class RegisterController extends Controller
 
             //$user = User::create($userData);
 
+
             // Handle file uploads for qualifications
             foreach ($request->file('qualifications') as $file) {
                 $path = $file->store('qualifications', 'public');
-                // You can store file paths in the database or process them as needed
-                // Example: TutorQualification::create(['user_id' => $user->id, 'file_path' => $path]);
             }
 
             // Send confirmation email

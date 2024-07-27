@@ -23,7 +23,7 @@ import ParentsHome from "views/pages/ParentsHome";
 import TutorHome from "views/pages/TutorHome";
 import RegistrationSuccess from "views/index-sections/RegistrationSuccess";
 import LoginSuccess from "views/index-sections/LoginSuccess";
-
+import WaitingApproval from "views/index-sections/WaitingApproval";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -45,6 +45,7 @@ root.render(
       <Route path="/tutor-home" element={<TutorHome />} />
       <Route path="/registration-success" element={<RegistrationSuccess />} />
       <Route path="/login-success" element={<LoginSuccess />} />
+      <Route path="/waiting-approval" element={<WaitingApproval />} />
 
 
       <Route path="*" element={<Navigate to="/index" replace />} />
