@@ -7,9 +7,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use App\Mail\LoginConfirmation;
-
 
 class LoginController extends Controller
 {
@@ -22,7 +22,12 @@ class LoginController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if ($user) {
-            // Generate a unique token for email verification
+            // Ensure the user's email is verified
+            if (!$user->hasVerifiedEmail()) {
+                return response()->json(['message' => 'Email not verified. Please check your email for verification.'], 401);
+            }
+
+            // Generate a unique token for login verification
             $token = Str::random(60);
             $user->update(['login_token' => $token]);
 
@@ -43,7 +48,6 @@ class LoginController extends Controller
             Auth::login($user);
             $user->update(['login_token' => null]); // Clear the token after use
             $homeUrl = $this->determineHomeUrl($user);
-            // return response()->json(['redirect' => $homeUrl], 200);
             return redirect()->away($homeUrl);
         }
 
@@ -52,13 +56,13 @@ class LoginController extends Controller
 
     private function determineHomeUrl($user)
     {
-        $frontendBaseUrl = 'http://127.0.0.1:3000';
+        $frontendBaseUrl = env('FRONTEND_URL','http://127.0.0.1:3000');
         $roleHomeUrls = [
-                1 => '/homeschooler',
-                2 => '/parents-home',
-                3 => '/tutor-home',
+            1 => '/homeschooler',
+            2 => '/parents-home',
+            3 => '/tutor-home',
         ];
 
-        return $frontendBaseUrl . ($roleHomeUrls[$user->role->name] ?? '/');
+        return $frontendBaseUrl . ($roleHomeUrls[$user->role->id] ?? '/');
     }
 }

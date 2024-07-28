@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Crypt;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -19,6 +20,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'role_id',
         'curriculum_id',
         'is_approved',
+        'google_access_token',
+        'google_refresh_token',
 
     ];
 
@@ -101,5 +104,27 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Qualification::class, 'tutor_id');
     }
+
+    //encrypt token
+    public function setGoogleAccessTokenAttribute($value)
+    {
+        $this->attributes['google_access_token'] = Crypt::encryptString($value);
+    }
+
+    public function getGoogleAccessTokenAttribute($value)
+    {
+        return Crypt::decryptString($value);
+    }
+
+    public function setGoogleRefreshTokenAttribute($value)
+    {
+        $this->attributes['google_refresh_token'] = Crypt::encryptString($value);
+    }
+
+    public function getGoogleRefreshTokenAttribute($value)
+    {
+        return Crypt::decryptString($value);
+    }
+
 
 }

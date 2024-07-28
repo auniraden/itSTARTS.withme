@@ -13,26 +13,48 @@ import {
   Col,
   Spinner
 } from "reactstrap";
+import { GoogleLogin } from '@react-oauth/google';
 
+
+
+
+// Set the base URL for all axios requests
+axios.defaults.baseURL = 'http://127.0.0.1:8000';
 function StudentClasses() {
   const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [events, setEvents] = useState([]);
 
   useEffect(() => {
     fetchClasses();
+    fetchCalendarEvents();
   }, []);
 
   const fetchClasses = async () => {
     try {
       setLoading(true);
       // Replace with your actual API endpoint
-      const response = await axios.get('/api/student/classes');
+      const response = await axios.get('/api/auth/google');
       setClasses(response.data);
       setLoading(false);
     } catch (err) {
-      setError('Failed to fetch classes. Please try again later.');
-      setLoading(false);
+      if (err.response && err.response.status === 401) {
+        // Redirect to Google authentication
+        window.location.href = '/api/auth/google';
+      } else {
+        setError('Failed to fetch classes. Please try again later.');
+        setLoading(false);
+      }
+    }
+  };
+
+  const fetchCalendarEvents = async () => {
+    try {
+      const response = await axios.get('/api/calendar/events');
+      setEvents(response.data);
+    } catch (err) {
+      setError('Failed to fetch calendar events. Please try again later.');
     }
   };
 
@@ -54,8 +76,20 @@ function StudentClasses() {
 
   return (
     <Container fluid>
+      <GoogleLogin
+      onSuccess={credentialResponse => {
+      console.log(credentialResponse);
+    }}
+    onError={() => {
+      console.log('Login Failed');
+    }}
+  />
       <Row>
-        {classes.map((classItem, index) => (
+      {classes.map((classItem, index) => {
+          // Find corresponding event for the class (example logic, may need adjustment)
+          const event = events.find(ev => ev.summary === classItem.name);
+          const scheduleTime = event ? `${event.start} - ${event.end}` : 'No schedule available';
+        return (
           <Col key={index} xs={12} sm={6} md={4} lg={3} className="mb-4">
             <Card style={{ height: '100%', borderRadius: "15px" }}>
               <CardImg
@@ -66,14 +100,11 @@ function StudentClasses() {
                 width="100%"
               />
               <CardBody className="d-flex flex-column">
-                <CardTitle tag="h5" style={{ fontWeight: "bold" }}>
-                  {classItem.code}
-                </CardTitle>
-                <CardSubtitle className="mb-2 text-muted" tag="h6">
-                  {classItem.scheduleTime}
-                </CardSubtitle>
+              <CardTitle tag="h5">{classItem.name}</CardTitle>
+                <CardSubtitle tag="h6" className="mb-2 text-muted">Code: {classItem.code}</CardSubtitle>
                 <CardText>
-                  {classItem.tutorName}
+                  <p>Schedule: {scheduleTime}</p>
+                  <p>Tutor: {classItem.tutorName}</p>
                 </CardText>
                 <div style={{ marginTop: "auto", display: "flex", justifyContent: "flex-end" }}>
                   <Button
@@ -83,7 +114,7 @@ function StudentClasses() {
                       borderRadius: "50px",
                       fontWeight: "bold"
                     }}
-                    onClick={() => {/* Handle class navigation */}}
+                    onClick={() => window.open(classItem.link, '_blank')}
                   >
                     Go to class
                     <i
@@ -95,7 +126,8 @@ function StudentClasses() {
               </CardBody>
             </Card>
           </Col>
-        ))}
+        );
+    })}
       </Row>
     </Container>
   );

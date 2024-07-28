@@ -14,6 +14,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
 use App\Models\Subject;
 use App\Models\TutorSubject;
+use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
@@ -33,12 +34,14 @@ class RegisterController extends Controller
             if (!is_object($role)) {
                 throw new \Exception('Failed to create or retrieve the role.');
             }
+            $token = Str::random(60);
             $user = User::create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'role_id' => $role->id,
                 'curriculum_id' => $request->curriculum_id,
+                'email_verification_token' => $token,
             ]);
 
             // Send confirmation email
@@ -69,6 +72,7 @@ class RegisterController extends Controller
             if (!is_object($role)) {
                 throw new \Exception('Failed to create or retrieve the role.');
             }
+            $token = Str::random(60);
 
             $user = User::create([
                 'first_name' => $request->first_name,
@@ -76,6 +80,7 @@ class RegisterController extends Controller
                 'email' => $request->email,
                 'role_id' => $role->id,
                 'curriculum_id' => $request->curriculum_id,
+                'email_verification_token' => $token,
             ]);
 
              // Create children records
@@ -128,12 +133,14 @@ class RegisterController extends Controller
             if (!is_object($role)) {
                 throw new \Exception('Failed to create or retrieve the role.');
             }
+            $token = Str::random(60);
             $user = User::create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'role_id' => $role->id,
                 'curriculum_id' => $request->curriculum_id,
+                'email_verification_token' => $token,
                 'class_type' => $request->class_type,
                 'rate_per_hour' => $request->rate_per_hour,
                 'is_approved' => false, // Initial approval status set to false

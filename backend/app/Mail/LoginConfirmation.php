@@ -8,12 +8,16 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Log;
 
 class LoginConfirmation extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $user;
+
     /**
      * Create a new message instance.
      */
@@ -35,31 +39,33 @@ class LoginConfirmation extends Mailable
     /**
      * Get the message content definition.
      */
-    public function content()
-{
-    $loginUrl = url("/api/login/confirm/{$this->user->login_token}");
-
-    return new Content(
-        view: 'emails.login_confirmation',
-        with: [
-            'name' => $this->user->first_name . ' ' . $this->user->last_name,
-            'loginUrl' => $loginUrl,
-        ],
-        text: false
-    );
-}
-
-    private function determineHomeUrl($user)
+    public function content(): Content
     {
-        $frontendBaseUrl = 'http://127.0.0.1:3000';
-        $roleHomeUrls = [
-            1 => '/homeschooler',
-            2 => '/parents-home',
-            3 => '/tutor-home',
-        ];
+        $loginUrl = $this->createLoginUrl($this->user);
 
-        return $frontendBaseUrl . ($roleHomeUrls[$user->role->name] ?? '/');
+        return new Content(
+            view: 'emails.login_confirmation',
+            with: [
+                'name' => $this->user->first_name . ' ' . $this->user->last_name,
+                'loginUrl' => $loginUrl,
+            ],
+            text:false
+        );
     }
+
+    protected function createLoginUrl($user): string
+    {
+        $expires = Carbon::now()->addMinutes(60); // Link valid for 60 minutes
+        $token = $user->login_token;
+
+        $loginUrl = URL::temporarySignedRoute(
+            'login.confirm', $expires, ['token' => $token]
+        );
+        Log::info('Generated login URL:', ['url' => $loginUrl]);
+
+        return $loginUrl;
+    }
+
     /**
      * Get the attachments for the message.
      *
@@ -69,6 +75,4 @@ class LoginConfirmation extends Mailable
     {
         return [];
     }
-
-
 }

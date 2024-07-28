@@ -7,7 +7,7 @@ import {
   Col,
   Progress
 } from "reactstrap";
-import Chart from "react-apexcharts";
+// import Chart from "react-apexcharts";
 import axios from "axios";
 
 const ParentsViewReport = () => {
@@ -40,51 +40,51 @@ const ParentsViewReport = () => {
         setDate(`${day}, ${formattedDate}`);
     }, []);
 
-    const heatmapOptions = {
-        chart: {
-            height: 350,
-            type: 'heatmap',
-        },
-        plotOptions: {
-            heatmap: {
-                shadeIntensity: 0.5,
-                colorScale: {
-                    ranges: [
-                        {
-                            from: 0,
-                            to: 10,
-                            color: '#FDD4CF',
-                            name: '0-10 mins'
-                        },
-                        {
-                            from: 11,
-                            to: 20,
-                            color: '#FFADA4',
-                            name: '11-20 mins'
-                        },
-                        {
-                            from: 21,
-                            to: 30,
-                            color: '#FF7A6C',
-                            name: '21-30 mins'
-                        },
-                        {
-                            from: 31,
-                            to: 40,
-                            color: '#FE4632',
-                            name: '31-40 mins'
-                        }
-                    ]
-                }
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        title: {
-            text: 'Engagement Time Heatmap'
-        }
-    };
+    // const heatmapOptions = {
+    //     chart: {
+    //         height: 350,
+    //         type: 'heatmap',
+    //     },
+    //     plotOptions: {
+    //         heatmap: {
+    //             shadeIntensity: 0.5,
+    //             colorScale: {
+    //                 ranges: [
+    //                     {
+    //                         from: 0,
+    //                         to: 10,
+    //                         color: '#FDD4CF',
+    //                         name: '0-10 mins'
+    //                     },
+    //                     {
+    //                         from: 11,
+    //                         to: 20,
+    //                         color: '#FFADA4',
+    //                         name: '11-20 mins'
+    //                     },
+    //                     {
+    //                         from: 21,
+    //                         to: 30,
+    //                         color: '#FF7A6C',
+    //                         name: '21-30 mins'
+    //                     },
+    //                     {
+    //                         from: 31,
+    //                         to: 40,
+    //                         color: '#FE4632',
+    //                         name: '31-40 mins'
+    //                     }
+    //                 ]
+    //             }
+    //         }
+    //     },
+    //     dataLabels: {
+    //         enabled: false
+    //     },
+    //     title: {
+    //         text: 'Engagement Time Heatmap'
+    //     }
+    // };
 
     return (
         <Container className="content-wrapper" style={{backgroundColor:'white', borderRadius:'20px', marginTop:'50px', padding: '20px'}}>
@@ -102,12 +102,12 @@ const ParentsViewReport = () => {
                 </Col>
             </Row>
             <div style={{backgroundColor:'white', borderRadius:'20px', padding: '20px'}}>
-                <Chart
+                {/* <Chart
                     options={heatmapOptions}
                     series={heatmapData}
                     type="heatmap"
                     height={350}
-                />
+                /> */}
             </div>
             <div style={{marginTop: '20px'}}>
                 <h7 style={{marginLeft:'30px', fontWeight:'bold'}}>Tasks Completed Today</h7>

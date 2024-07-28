@@ -19,6 +19,18 @@ import {
   Col
 } from "reactstrap";
 import LoginNavbar from "components/Navbars/LoginNavbar";
+axios.defaults.baseURL = 'http://127.0.0.1:8000'; // Adjust if your API base URL is different
+
+//Function to fetch CSRF token and set up Axios
+const setCsrfToken = async () => {
+  try {
+    const response = await axios.get('http://127.0.0.1:8000/csrf-token');
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = response.data.token;
+    axios.defaults.withCredentials = true; // Include credentials with requests
+  } catch (error) {
+    console.error('Error fetching CSRF token:', error);
+  }
+};
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -38,17 +50,20 @@ function Login() {
     };
   }, []);
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+        await setCsrfToken();
         const response = await axios.post('http://127.0.0.1:8000/api/login', { email });
         // Handle successful registration
         navigate('/login-success');
-        setMessage('Please check your email for the login link.');
+        setMessage('Please check your email for the login link.', response.data);
     } catch (error) {
-        console.error('Error sending login link:', error);
+        console.error('Error sending login link:', error.response.data);
         if (error.response && error.response.status === 401) {
-            setMessage('Invalid email address. Please try again.');
+            alert(`Invalid email address: ${error.response.data || 'Unknown error'} Please try again.`);
         } else {
             setMessage('There was an error sending the login link. Please try again.');
         }
