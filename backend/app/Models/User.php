@@ -20,8 +20,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'role_id',
         'curriculum_id',
         'is_approved',
-        'google_access_token',
-        'google_refresh_token',
 
     ];
 
@@ -103,27 +101,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public function qualifications()
     {
         return $this->hasMany(Qualification::class, 'tutor_id');
-    }
-
-    //encrypt token
-    public function setGoogleAccessTokenAttribute($value)
-    {
-        $this->attributes['google_access_token'] = Crypt::encryptString($value);
-    }
-
-    public function getGoogleAccessTokenAttribute($value)
-    {
-        return Crypt::decryptString($value);
-    }
-
-    public function setGoogleRefreshTokenAttribute($value)
-    {
-        $this->attributes['google_refresh_token'] = Crypt::encryptString($value);
-    }
-
-    public function getGoogleRefreshTokenAttribute($value)
-    {
-        return Crypt::decryptString($value);
     }
 
 

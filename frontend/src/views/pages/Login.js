@@ -37,6 +37,7 @@ function Login() {
   const [emailFocus, setEmailFocus] = useState(false);
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   React.useEffect(() => {
     document.body.classList.add("login-page");
@@ -54,20 +55,26 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
         await setCsrfToken();
-        const response = await axios.post('http://127.0.0.1:8000/api/login', { email });
+        const response = await axios.post('/api/login', { email } );
         // Handle successful registration
         navigate('/login-success');
         setMessage('Please check your email for the login link.', response.data);
     } catch (error) {
         console.error('Error sending login link:', error.response.data);
         if (error.response && error.response.status === 401) {
-            alert(`Invalid email address: ${error.response.data || 'Unknown error'} Please try again.`);
-        } else {
-            setMessage('There was an error sending the login link. Please try again.');
-        }
+            alert("Invalid email address. Please try again. If you don\'t receive an email, please check your spam folder or contact support.");
+        } else if (error.response && error.response.status === 500) {
+          alert('Server error. Please try again later or contact support if the issue persists.');
+      } else {
+          alert('There was an error sending the login link. Please try again. If the problem continues, please contact support.');
+      }
     }
+    finally {
+      setLoading(false); // Set loading to false when the request finishes
+  }
 };
 
   return (

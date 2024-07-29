@@ -1,60 +1,81 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+
+
 import {
   Button,
   Card,
   CardBody,
   CardTitle,
-  CardImg,
-  CardSubtitle,
   CardText,
   Container,
   Row,
   Col,
-  Spinner
+  Spinner,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Form,
+  FormGroup,
+  Input
 } from "reactstrap";
-import { GoogleLogin } from '@react-oauth/google';
 
-
-
-
-// Set the base URL for all axios requests
 axios.defaults.baseURL = 'http://127.0.0.1:8000';
+
+// axios.interceptors.request.use(
+//   config => {
+//     const token = localStorage.getItem('token');
+//     if (token) {
+//       config.headers['Authorization'] = 'Bearer ' + token;
+//     }
+//     return config;
+//   },
+//   error => {
+//     return Promise.reject(error);
+//   }
+// );
+
+
 function StudentClasses() {
-  const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [events, setEvents] = useState([]);
+  const [curriculum, setCurriculum] = useState(null);
+  const [tutors, setTutors] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [goals, setGoals] = useState(['', '', '']);
 
   useEffect(() => {
-    fetchClasses();
-    fetchCalendarEvents();
+    fetchData();
   }, []);
 
-  const fetchClasses = async () => {
+  const fetchData = async () => {
     try {
-      setLoading(true);
-      // Replace with your actual API endpoint
-      const response = await axios.get('/api/auth/google');
-      setClasses(response.data);
+      const [curriculumResponse, tutorsResponse] = await Promise.all([
+        axios.get('/api/homeschooler/curriculum'),
+        axios.get('/api/homeschooler/tutors')
+      ]);
+      setCurriculum(curriculumResponse.data);
+      setTutors(tutorsResponse.data);
       setLoading(false);
     } catch (err) {
-      if (err.response && err.response.status === 401) {
-        // Redirect to Google authentication
-        window.location.href = '/api/auth/google';
-      } else {
-        setError('Failed to fetch classes. Please try again later.');
-        setLoading(false);
-      }
+      setError('Error fetching data');
+      setLoading(false);
     }
   };
 
-  const fetchCalendarEvents = async () => {
+  const handleGoalChange = (index, value) => {
+    const newGoals = [...goals];
+    newGoals[index] = value;
+    setGoals(newGoals);
+  };
+
+  const saveGoals = async () => {
     try {
-      const response = await axios.get('/api/calendar/events');
-      setEvents(response.data);
+      await axios.post('/api/goals', { goals });
+      setModalOpen(false);
     } catch (err) {
-      setError('Failed to fetch calendar events. Please try again later.');
+      console.error('Error saving goals:', err);
     }
   };
 
@@ -74,38 +95,42 @@ function StudentClasses() {
     );
   }
 
+  const cards = [
+    {
+      title: "Google Classroom",
+      description: "Access your Google Classroom",
+      buttonText: "Classroom",
+      onClick: () => window.open('https://classroom.google.com', '_blank')
+    },
+    {
+      title: "My Curriculum",
+      description: curriculum ? curriculum.name : "No curriculum assigned",
+      buttonText: "Explore my curriculum",
+      onClick: () => curriculum && window.open(curriculum.link, '_blank')
+    },
+    {
+      title: "Create Top 3 Goals",
+      description: "Set your daily goals, of what would you like to achieve today!",
+      buttonText: "Create",
+      onClick: () => setModalOpen(true)
+    },
+    {
+      title: "My Tutors List",
+      description: `You have ${tutors.length} tutor(s)`,
+      buttonText: "View Tutors",
+      onClick: () => {/* Implement tutor list view */}
+    }
+  ];
+
   return (
     <Container fluid>
-      <GoogleLogin
-      onSuccess={credentialResponse => {
-      console.log(credentialResponse);
-    }}
-    onError={() => {
-      console.log('Login Failed');
-    }}
-  />
       <Row>
-      {classes.map((classItem, index) => {
-          // Find corresponding event for the class (example logic, may need adjustment)
-          const event = events.find(ev => ev.summary === classItem.name);
-          const scheduleTime = event ? `${event.start} - ${event.end}` : 'No schedule available';
-        return (
-          <Col key={index} xs={12} sm={6} md={4} lg={3} className="mb-4">
+        {cards.map((card, index) => (
+          <Col key={index} xs={12} sm={6} md={3} className="mb-4">
             <Card style={{ height: '100%', borderRadius: "15px" }}>
-              <CardImg
-                style={{ borderRadius: "5px", height: "200px", objectFit: "cover" }}
-                alt="Class image"
-                src={require("assets/img/monogram-me.png")}
-                top
-                width="100%"
-              />
               <CardBody className="d-flex flex-column">
-              <CardTitle tag="h5">{classItem.name}</CardTitle>
-                <CardSubtitle tag="h6" className="mb-2 text-muted">Code: {classItem.code}</CardSubtitle>
-                <CardText>
-                  <p>Schedule: {scheduleTime}</p>
-                  <p>Tutor: {classItem.tutorName}</p>
-                </CardText>
+                <CardTitle tag="h5">{card.title}</CardTitle>
+                <CardText>{card.description}</CardText>
                 <div style={{ marginTop: "auto", display: "flex", justifyContent: "flex-end" }}>
                   <Button
                     style={{
@@ -114,21 +139,39 @@ function StudentClasses() {
                       borderRadius: "50px",
                       fontWeight: "bold"
                     }}
-                    onClick={() => window.open(classItem.link, '_blank')}
+                    onClick={card.onClick}
                   >
-                    Go to class
-                    <i
-                      className="now-ui-icons arrows-1_minimal-right"
-                      style={{ color: "#232D22", marginLeft: "5px", fontWeight: "bold" }}
-                    ></i>
+                    {card.buttonText}
+                    <i className="now-ui-icons arrows-1_minimal-right" style={{ marginLeft: "5px" }}></i>
                   </Button>
                 </div>
               </CardBody>
             </Card>
           </Col>
-        );
-    })}
+        ))}
       </Row>
+
+      <Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)}>
+        <ModalHeader toggle={() => setModalOpen(!modalOpen)}>Set Top 3 Goals</ModalHeader>
+        <ModalBody>
+          <Form>
+            {goals.map((goal, index) => (
+              <FormGroup key={index}>
+                <Input
+                  type="text"
+                  value={goal}
+                  onChange={(e) => handleGoalChange(index, e.target.value)}
+                  placeholder={`Goal ${index + 1}`}
+                />
+              </FormGroup>
+            ))}
+          </Form>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={saveGoals}>Save Goals</Button>
+          <Button color="secondary" onClick={() => setModalOpen(false)}>Cancel</Button>
+        </ModalFooter>
+      </Modal>
     </Container>
   );
 }

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use App\Mail\LoginConfirmation;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
@@ -29,7 +30,8 @@ class LoginController extends Controller
 
             // Generate a unique token for login verification
             $token = Str::random(60);
-            $user->update(['login_token' => $token]);
+            $hashedToken = hash('sha256', $token);
+            $user->update(['login_token' => $hashedToken]);
 
             // Send confirmation email with the link to the respective homepage
             Mail::to($user->email)->send(new LoginConfirmation($user));
@@ -42,7 +44,10 @@ class LoginController extends Controller
 
     public function confirmLogin($token)
     {
-        $user = User::where('login_token', $token)->first();
+        Log::info('Received token for confirmation:', ['token' => $token]);
+
+        $hashedToken = hash('sha256', $token);
+        $user = User::where('login_token', $hashedToken)->first();
 
         if ($user) {
             Auth::login($user);
@@ -56,7 +61,7 @@ class LoginController extends Controller
 
     private function determineHomeUrl($user)
     {
-        $frontendBaseUrl = env('FRONTEND_URL','http://127.0.0.1:3000');
+        $frontendBaseUrl = env('FRONTEND_URL','http://localhost:3000');
         $roleHomeUrls = [
             1 => '/homeschooler',
             2 => '/parents-home',

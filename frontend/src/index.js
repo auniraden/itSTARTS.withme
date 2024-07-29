@@ -2,12 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 
-// styles for this kit
+// styles
 import "assets/css/bootstrap.min.css";
 import "assets/scss/now-ui-kit.scss?v=1.5.0";
 import "assets/demo/demo.css?v=1.5.0";
 import "assets/demo/nucleo-icons-page-styles.css?v=1.5.0";
-// pages for this kit
+
+
+// pages
 import Index from "views/Index.js";
 import NucleoIcons from "views/NucleoIcons.js";
 import LandingPage from "views/examples/LandingPage.js";
@@ -24,7 +26,7 @@ import TutorHome from "views/pages/TutorHome";
 import RegistrationSuccess from "views/index-sections/RegistrationSuccess";
 import LoginSuccess from "views/index-sections/LoginSuccess";
 import WaitingApproval from "views/index-sections/WaitingApproval";
-import GoogleSignIn from "views/pages/GoogleSignIn";
+
 
 
 
@@ -49,7 +51,6 @@ root.render(
       <Route path="/registration-success" element={<RegistrationSuccess />} />
       <Route path="/login-success" element={<LoginSuccess />} />
       <Route path="/waiting-approval" element={<WaitingApproval />} />
-      <Route path="/google-sign-in" element={<GoogleSignIn />} />
 
 
 
