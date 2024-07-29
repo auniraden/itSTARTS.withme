@@ -1,177 +1,198 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-
-
 import {
   Button,
   Card,
   CardBody,
   CardTitle,
+  CardImg,
+  CardSubtitle,
   CardText,
   Container,
-  Row,
-  Col,
-  Spinner,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Form,
-  FormGroup,
-  Input
+  CardGroup,
+  Modal
 } from "reactstrap";
 
+// Set the base URL for all axios requests
 axios.defaults.baseURL = 'http://127.0.0.1:8000';
 
-// axios.interceptors.request.use(
-//   config => {
-//     const token = localStorage.getItem('token');
-//     if (token) {
-//       config.headers['Authorization'] = 'Bearer ' + token;
-//     }
-//     return config;
-//   },
-//   error => {
-//     return Promise.reject(error);
-//   }
-// );
-
-
 function StudentClasses() {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [curriculum, setCurriculum] = useState(null);
-  const [tutors, setTutors] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [goals, setGoals] = useState(['', '', '']);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const [curriculumResponse, tutorsResponse] = await Promise.all([
-        axios.get('/api/homeschooler/curriculum'),
-        axios.get('/api/homeschooler/tutors')
-      ]);
-      setCurriculum(curriculumResponse.data);
-      setTutors(tutorsResponse.data);
-      setLoading(false);
-    } catch (err) {
-      setError('Error fetching data');
-      setLoading(false);
-    }
-  };
-
-  const handleGoalChange = (index, value) => {
-    const newGoals = [...goals];
-    newGoals[index] = value;
-    setGoals(newGoals);
-  };
-
-  const saveGoals = async () => {
-    try {
-      await axios.post('/api/goals', { goals });
-      setModalOpen(false);
-    } catch (err) {
-      console.error('Error saving goals:', err);
-    }
-  };
-
-  if (loading) {
-    return (
-      <Container className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-        <Spinner color="primary" />
-      </Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container className="text-center mt-5">
-        <h3>{error}</h3>
-      </Container>
-    );
-  }
-
-  const cards = [
-    {
-      title: "Google Classroom",
-      description: "Access your Google Classroom",
-      buttonText: "Classroom",
-      onClick: () => window.open('https://classroom.google.com', '_blank')
-    },
-    {
-      title: "My Curriculum",
-      description: curriculum ? curriculum.name : "No curriculum assigned",
-      buttonText: "Explore my curriculum",
-      onClick: () => curriculum && window.open(curriculum.link, '_blank')
-    },
-    {
-      title: "Create Top 3 Goals",
-      description: "Set your daily goals, of what would you like to achieve today!",
-      buttonText: "Create",
-      onClick: () => setModalOpen(true)
-    },
-    {
-      title: "My Tutors List",
-      description: `You have ${tutors.length} tutor(s)`,
-      buttonText: "View Tutors",
-      onClick: () => {/* Implement tutor list view */}
-    }
-  ];
+  const [modalTooltips, setModalTooltips] = useState(false);
 
   return (
     <Container fluid>
-      <Row>
-        {cards.map((card, index) => (
-          <Col key={index} xs={12} sm={6} md={3} className="mb-4">
-            <Card style={{ height: '100%', borderRadius: "15px" }}>
-              <CardBody className="d-flex flex-column">
-                <CardTitle tag="h5">{card.title}</CardTitle>
-                <CardText>{card.description}</CardText>
-                <div style={{ marginTop: "auto", display: "flex", justifyContent: "flex-end" }}>
-                  <Button
-                    style={{
-                      backgroundColor: "#FCFBBB",
-                      color: "#232d22",
-                      borderRadius: "50px",
-                      fontWeight: "bold"
-                    }}
-                    onClick={card.onClick}
+      <CardGroup>
+        <Card className="mb-4" style={{marginRight:'20px', borderRadius:'10px'}}>
+          <CardImg
+            alt="Class image"
+            src={require("assets/img/monogram-me.png")}
+            top
+            width="100%"
+            style={{ height: "200px", objectFit: "cover" }}
+          />
+          <CardBody>
+            <CardTitle tag="h5" style={{fontWeight:'bold'}}>Google Classroom</CardTitle>
+            <CardSubtitle tag="h6" className="mb-2 text-muted" >
+              Get started with your classes by using Google Classroom!
+            </CardSubtitle>
+            <CardText >
+              Keep an eye on your email! Your tutor will soon invite you to join your Google Classroom. Make sure to accept the invitation and stay connected for all your lessons and updates.
+            </CardText>
+            <div style={{ marginTop: "auto", display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                style={{
+                  backgroundColor: "#FCFBBB",
+                  color: "#232d22",
+                  borderRadius: "50px",
+                  fontWeight: "bold"
+                }}
+                onClick={() => window.open("https://sites.google.com/view/classroom-workspace/", "_blank")}
+              >
+                Go to Google Classroom
+                <i
+                  className="now-ui-icons arrows-1_minimal-right"
+                  style={{ color: "#232D22", marginLeft: "5px", fontWeight: "bold" }}
+                ></i>
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
+
+        <Card className="mb-4" style={{marginRight:'20px' , borderRadius:'10px'}}>
+          <CardImg
+            alt="Class image"
+            src={require("assets/img/monogram-me.png")}
+            top
+            width="100%"
+            style={{ height: "200px", objectFit: "cover" }}
+          />
+          <CardBody className="d-flex flex-column">
+            <CardTitle tag="h5" style={{fontWeight:'bold'}}>Curriculum Info</CardTitle>
+            <CardSubtitle tag="h6" className="mb-2 text-muted">
+              Stay updated with your curriculum syllabus.
+            </CardSubtitle>
+            <CardText>
+              Stay up-to-date with all the latest updates related to your chosen exam boards, registration dates, and exam updates.
+            </CardText>
+            <div style={{ marginTop: "auto", display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                style={{
+                  backgroundColor: "#FCFBBB",
+                  color: "#232d22",
+                  borderRadius: "50px",
+                  fontWeight: "bold"
+                }}
+                onClick={() => window.open("_blank")}
+              >
+                Access now
+                <i
+                  className="now-ui-icons arrows-1_minimal-right"
+                  style={{ color: "#232D22", marginLeft: "5px", fontWeight: "bold" }}
+                ></i>
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
+
+        <Card className="mb-4" style={{marginRight:'20px' , borderRadius:'10px'}}>
+          <CardImg
+            alt="Class image"
+            src={require("assets/img/monogram-me.png")}
+            top
+            width="100%"
+            style={{ height: "200px", objectFit: "cover" }}
+          />
+          <CardBody className="d-flex flex-column">
+            <CardTitle tag="h5" style={{fontWeight:'bold'}}>Create Top 3 Goals</CardTitle>
+            <CardSubtitle tag="h6" className="mb-2 text-muted">
+              Just 3 goals needed each day!
+            </CardSubtitle>
+            <CardText>
+              Set just 3 goals to achieve each day—small wins lead to big victories!
+            </CardText>
+            <div style={{ marginTop: "auto", display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                style={{
+                  backgroundColor: "#FCFBBB",
+                  color: "#232d22",
+                  borderRadius: "50px",
+                  fontWeight: "bold"
+                }}
+                onClick={() => setModalTooltips(true)}
+              >
+                Create now
+                <i
+                  className="now-ui-icons arrows-1_minimal-right"
+                  style={{ color: "#232D22", marginLeft: "5px", fontWeight: "bold" }}
+                ></i>
+              </Button>
+              <Modal isOpen={modalTooltips} toggle={() => setModalTooltips(false)}>
+                <div className="modal-header">
+                  <h5 className="modal-title">
+                    My top 3 goals for today:
+                  </h5>
+                  <button
+                    aria-label="Close"
+                    className="close"
+                    type="button"
+                    onClick={() => setModalTooltips(false)}
                   >
-                    {card.buttonText}
-                    <i className="now-ui-icons arrows-1_minimal-right" style={{ marginLeft: "5px" }}></i>
+                    <span aria-hidden={true}>×</span>
+                  </button>
+                </div>
+                <div className="modal-body">
+                  <p>Textbox here (maximum three items only), then save to database (tasks)</p>
+                </div>
+                <div className="modal-footer">
+                  <Button
+                    color="primary"
+                    type="button"
+                    onClick={() => setModalTooltips(false)}
+                  >
+                    Save changes
                   </Button>
                 </div>
-              </CardBody>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+              </Modal>
+            </div>
+          </CardBody>
+        </Card>
 
-      <Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)}>
-        <ModalHeader toggle={() => setModalOpen(!modalOpen)}>Set Top 3 Goals</ModalHeader>
-        <ModalBody>
-          <Form>
-            {goals.map((goal, index) => (
-              <FormGroup key={index}>
-                <Input
-                  type="text"
-                  value={goal}
-                  onChange={(e) => handleGoalChange(index, e.target.value)}
-                  placeholder={`Goal ${index + 1}`}
-                />
-              </FormGroup>
-            ))}
-          </Form>
-        </ModalBody>
-        <ModalFooter>
-          <Button color="primary" onClick={saveGoals}>Save Goals</Button>
-          <Button color="secondary" onClick={() => setModalOpen(false)}>Cancel</Button>
-        </ModalFooter>
-      </Modal>
+        <Card className="mb-4" style={{marginRight:'20px' , borderRadius:'10px'}}>
+          <CardImg
+            alt="Class image"
+            src={require("assets/img/monogram-me.png")}
+            top
+            width="100%"
+            style={{ height: "200px", objectFit: "cover" }}
+          />
+          <CardBody className="d-flex flex-column">
+            <CardTitle tag="h5" style={{fontWeight:'bold'}}>My Tutors</CardTitle>
+            <CardSubtitle tag="h6" className="mb-2 text-muted">
+              Here is your list of tutors
+            </CardSubtitle>
+            <CardText>
+              Learn more about your tutors by viewing their details here.
+            </CardText>
+            <div style={{ marginTop: "auto", display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                style={{
+                  backgroundColor: "#FCFBBB",
+                  color: "#232d22",
+                  borderRadius: "50px",
+                  fontWeight: "bold"
+                }}
+                onClick={() => window.open("./my-tutors", "_blank")}
+              >
+                View my tutors
+                <i
+                  className="now-ui-icons arrows-1_minimal-right"
+                  style={{ color: "#232D22", marginLeft: "5px", fontWeight: "bold" }}
+                ></i>
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
+      </CardGroup>
     </Container>
   );
 }

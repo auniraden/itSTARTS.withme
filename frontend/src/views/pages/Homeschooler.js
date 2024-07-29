@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+//import axios from "axios";
 import {
   Badge,
   Container,
@@ -17,28 +17,9 @@ import ToMeLetter from "views/index-sections/ToMeLetter";
 import ThisFooterMain from "components/Footers/ThisFooterMain";
 
 
-axios.defaults.baseURL = 'http://127.0.0.1:8000'; //to point to backend
-axios.defaults.withCredentials = true;
-
-
-
-
-const setCsrfToken = async () => {
-  try {
-    await axios.get('/sanctum/csrf-cookie');
-  } catch (error) {
-    console.error('Error fetching CSRF token:', error);
-  }
-};
-
 function Homeschooler() {
   const [activeTab, setActiveTab] = useState('playground');
 
-
-  useEffect(() => {
-    setCsrfToken();
-
-  }, []);
 
   const renderContent = () => {
     switch (activeTab) {

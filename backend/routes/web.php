@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\HomeController;
 
 
 Route::get('/', function () {
@@ -19,6 +20,7 @@ Route::middleware(['web'])->group(function () {
     Route::get('/test-registration', function () {
         return view('test_registration');
     });
+
 
 
 

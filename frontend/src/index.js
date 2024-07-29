@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import axios from "axios";
 
 // styles
 import "assets/css/bootstrap.min.css";
@@ -27,7 +28,22 @@ import RegistrationSuccess from "views/index-sections/RegistrationSuccess";
 import LoginSuccess from "views/index-sections/LoginSuccess";
 import WaitingApproval from "views/index-sections/WaitingApproval";
 
+// Set the base URL for axios
+axios.defaults.baseURL = 'http://127.0.0.1:8000';
 
+// Add a request interceptor to include the token in the headers
+// axios.interceptors.request.use(
+//   (request) => {
+//     const token = localStorage.getItem('token');
+//     if (token) {
+//       request.headers['Authorization'] = `Bearer ${token}`;
+//     }
+//     return request;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

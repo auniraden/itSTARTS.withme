@@ -49,12 +49,20 @@ class LoginController extends Controller
         $hashedToken = hash('sha256', $token);
         $user = User::where('login_token', $hashedToken)->first();
 
+        if (!$user) {
+            // Try finding the user with a plain token if hashing wasn't used during storage
+            $user = User::where('login_token', $token)->first();
+        }
+
+
         if ($user) {
             Auth::login($user);
             $user->update(['login_token' => null]); // Clear the token after use
+            Log::info('User logged in successfully:', ['user_id' => $user->id]);
             $homeUrl = $this->determineHomeUrl($user);
             return redirect()->away($homeUrl);
         }
+        Log::warning('Invalid or expired token provided:', ['token' => $token]);
 
         return response()->json(['error' => 'Invalid or expired token'], 400);
     }

@@ -20,6 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'role_id',
         'curriculum_id',
         'is_approved',
+        'login_token',
 
     ];
 
