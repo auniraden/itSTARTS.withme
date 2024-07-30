@@ -45,8 +45,6 @@ class VerificationController extends Controller
         $frontendBaseUrl = env('FRONTEND_BASE_URL', 'http://127.0.0.1:3000');
         $redirectUrls = [
             1 => '/homeschooler',
-            2 => '/parents-home',
-            3 => '/tutor-home',
         ];
 
         $redirectUrl = $frontendBaseUrl . ($redirectUrls[$role] ?? '/');

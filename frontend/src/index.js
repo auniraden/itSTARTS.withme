@@ -27,6 +27,7 @@ import TutorHome from "views/pages/TutorHome";
 import RegistrationSuccess from "views/index-sections/RegistrationSuccess";
 import LoginSuccess from "views/index-sections/LoginSuccess";
 import WaitingApproval from "views/index-sections/WaitingApproval";
+import FindTutor from "views/pages/FindTutor";
 
 // Set the base URL for axios
 axios.defaults.baseURL = 'http://127.0.0.1:8000';
@@ -67,6 +68,8 @@ root.render(
       <Route path="/registration-success" element={<RegistrationSuccess />} />
       <Route path="/login-success" element={<LoginSuccess />} />
       <Route path="/waiting-approval" element={<WaitingApproval />} />
+      <Route path="/find-tutor" element={<FindTutor />} />
+
 
 
 

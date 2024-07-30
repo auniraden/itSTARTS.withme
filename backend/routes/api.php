@@ -11,6 +11,8 @@ use Illuminate\Routing\Middleware\ThrottleRequests;
 use App\Http\Controllers\CurriculumController;
 use App\Http\Controllers\TutorController;
 use App\Http\Controllers\GoalController;
+use App\Http\Controllers\LetterController;
+use App\Http\Controllers\Auth\LogoutController;
 
 //for registration
 Route::middleware([
@@ -22,9 +24,7 @@ Route::middleware([
         Route::post('/register/parent', [RegisterController::class, 'registerParent']);
         Route::post('/register/tutor', [RegisterController::class, 'registerTutor']);
         Route::post('/select-role', [RoleSelectionController::class, 'selectRole']);
-        Route::get('/homeschooler/curriculum', [CurriculumController::class, 'getUserCurriculum']);
-        Route::get('/homeschooler/tutors', [TutorController::class, 'getUserTutors']);
-        Route::post('/goals', [GoalController::class, 'store']);
+
 });
 
 //for verification
@@ -36,8 +36,23 @@ Route::get('/email/verify/{id}/{token}', [VerificationController::class, 'verify
 Route::get('/login/confirm/{token}', [LoginController::class, 'confirmLogin'])->name('login.confirm');
 Route::post('/login', [LoginController::class, 'login']);
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/homeschooler/curriculum', [CurriculumController::class, 'getUserCurriculum']);
+    Route::get('/homeschooler/tutors', [TutorController::class, 'getUserTutors']);
+    Route::post('/goals', [GoalController::class, 'store']);
+});
 
 //sacntum
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+//Letter
+//Route::post('/dearmeletters', [LetterController::class, 'store']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/dearmeletters', [LetterController::class, 'store']);
+});
+
+//Logout
+Route::middleware('auth:sanctum')->post('/logout', [LogoutController::class, 'logout']);

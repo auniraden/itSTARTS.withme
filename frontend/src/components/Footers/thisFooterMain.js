@@ -36,23 +36,14 @@ function ThisFooterMain() {
             <img src={require("assets/img/complete_logo.png")} alt="itSTARTS" style={{ maxWidth: '150px', marginBottom: '20px' }} />
           </Col>
           <Col md={3}></Col>
-          <Col md={2}>
+          <Col md={2}></Col>
+          <Col md={3}>
             <h5>Company</h5>
             <ul style={{ marginRight: '70px' }}>
-              <li><a href="#" className="footer-link d-block mb-2">About us</a></li>
               <li><a href="#" className="footer-link d-block mb-2">Email us</a></li>
               <li><a href="#" className="footer-link d-block mb-2">Safeguarding policy</a></li>
               <li><a href="#" className="footer-link d-block mb-2">Terms of use</a></li>
               <li><a href="#" className="footer-link d-block ">Privacy</a></li>
-            </ul>
-          </Col>
-          <Col md={3}>
-            <h5>Support</h5>
-            <ul style={{ marginRight: '100px' }}>
-              <li><a href="#pablo" className="footer-link d-block mb-2">Blog</a></li>
-              <li><a href="#pablo" className="footer-link d-block mb-2">Sign up as tutor</a></li>
-              <li><a href="#pablo" className="footer-link d-block mb-2">Student Code of Conduct</a></li>
-              <li><a href="#pablo" className="footer-link d-block ">Tutor Code of Conduct</a></li>
             </ul>
           </Col>
         </Row>

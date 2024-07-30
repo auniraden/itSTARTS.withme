@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   Collapse,
@@ -21,6 +22,12 @@ import {
 function ParentsHomeschoolerNavbar() {
   const [navbarColor, setNavbarColor] = React.useState("bg-white");
   const [collapseOpen, setCollapseOpen] = React.useState(false);
+  const navigate = useNavigate();
+
+    // const handleLogout = async () => {
+    //     await logout();
+    //     navigate('./Login');
+    // };
 
   React.useEffect(() => {
     const updateNavbarColor = () => {
@@ -56,39 +63,26 @@ function ParentsHomeschoolerNavbar() {
                   CURRICULUM
                 </DropdownToggle>
                 <DropdownMenu>
-                  {/* Your dropdown items */}
+                <DropdownItem>
+                      curriculums.curriculum_name
+                    </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
             </NavItem>
-            <NavItem>
-              <Link to="/login" className="nav-link">
-                <i className="now-ui-icons ui-1_bell-53"></i>
-              </Link>
-            </NavItem>
           </Nav>
           <Nav navbar className="ml-auto">
-            <NavItem className="mr-2">
-              <InputGroup>
-                <Input placeholder="Search..." />
-                <InputGroupAddon addonType="append">
-                  <InputGroupText>
-                    <i className="now-ui-icons ui-1_zoom-bold"></i>
-                  </InputGroupText>
-                </InputGroupAddon>
-              </InputGroup>
-            </NavItem>
-            <NavItem className="mr-2">
-              <Button className="nav-link" style={{borderRadius:"50px", backgroundColor:"#FF6F42", fontWeight:"bold"}}>
-                FIND TUTOR
-              </Button>
-            </NavItem>
             <NavItem>
               <UncontrolledDropdown nav>
                 <DropdownToggle nav caret>
                   DASHBOARD
                 </DropdownToggle>
                 <DropdownMenu right>
-                  {/* Your dashboard dropdown items */}
+                <DropdownItem>
+                      Hi 'user.first_name user.last_name'
+                    </DropdownItem>
+                    <DropdownItem  /*onClick={handleLogout}*/ target="_blank">
+                      Sign out
+                    </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
             </NavItem>

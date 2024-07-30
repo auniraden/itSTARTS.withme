@@ -9,16 +9,16 @@ class GoalController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'goals' => 'required|array|size:3',
-            'goals.*' => 'required|string|max:255',
+            'goals' => 'required|array|max:3',
+            'goals.*' => 'string|max:255',
         ]);
 
         $user = $request->user();
 
-        // Delete existing goals for the user
+        // Clear any previous goals for the user for today
         Goal::where('student_id', $user->id)->delete();
 
-        // Create new goals
+        // Store new goals
         foreach ($request->goals as $goalName) {
             Goal::create([
                 'student_id' => $user->id,
@@ -27,6 +27,29 @@ class GoalController extends Controller
             ]);
         }
 
-        return response()->json(['message' => 'Goals saved successfully'], 201);
+        return response()->json(['message' => 'Goals saved successfully!', 'goals' => $request->goals]);
     }
+
+    public function getUserGoals(Request $request)
+    {
+        $user = $request->user();
+        $goals = Goal::where('student_id', $user->id)->get();
+        return response()->json(['goals' => $goals]);
+    }
+
+    public function updateProgress(Request $request)
+{
+    $user = $request->user();
+
+    foreach ($request->goals as $goalData) {
+        $goal = Goal::find($goalData['id']);
+        if ($goal && $goal->student_id == $user->id) {
+            $goal->progress = $goalData['progress'];
+            $goal->save();
+        }
+    }
+
+    $updatedGoals = Goal::where('student_id', $user->id)->get();
+    return response()->json(['goals' => $updatedGoals]);
+}
 }

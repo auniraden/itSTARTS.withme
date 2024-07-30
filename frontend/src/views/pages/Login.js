@@ -19,7 +19,7 @@ import {
   Col
 } from "reactstrap";
 import LoginNavbar from "components/Navbars/LoginNavbar";
-axios.defaults.baseURL = 'http://127.0.0.1:8000'; // Adjust if your API base URL is different
+axios.defaults.baseURL = 'http://127.0.0.1:8000';
 
 //Function to fetch CSRF token and set up Axios
 const setCsrfToken = async () => {

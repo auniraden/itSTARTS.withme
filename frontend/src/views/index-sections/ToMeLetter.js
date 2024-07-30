@@ -1,12 +1,18 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useRef } from "react";
 import { useEffect } from "react";
 import { Container, Row, Col, Input, Button, Dropdown, DropdownToggle, DropdownMenu } from "reactstrap";
 import { DatePicker } from "reactstrap-date-picker";
 
+axios.defaults.baseURL = 'http://127.0.0.1:8000';
+axios.defaults.withCredentials = true;
+
+
+
 function ToMeLetter() {
-    const [letterContent, setLetterContent] = useState("");
-    const [deliveryTime, setDeliveryTime] = useState("6 months");
+  const [content, setContent] = useState('');
+    const [deliveryDate, setDeliveryDate ]= useState("6 months");
     const [email, setEmail] = useState("");
     const [dateDropdownOpen, setDateDropdownOpen] = useState(false);
     const [birthdayDropdownOpen, setBirthdayDropdownOpen] = useState(false);
@@ -15,10 +21,31 @@ function ToMeLetter() {
 
     const datePickerRef = useRef(null);
     const birthdayPickerRef = useRef(null);
+    const setCsrfToken = async () => {
+      try {
+        await axios.get('http://127.0.0.1:8000/sanctum/csrf-cookie');
+      } catch (error) {
+        console.error('Error fetching CSRF token:', error);
+      }
+    };
+
+
 
     const handleSubmit = (e) => {
       e.preventDefault();
-      // Handle letter submission logic here
+      setCsrfToken();
+      console.log({ content, deliveryDate, email }); // Log data being sent
+      axios.post('/api/dearmeletters', {
+        content,
+        delivery_date: deliveryDate,
+        email
+      }).then(response => {
+        console.log(response.data);
+        alert("All set!")
+      }).catch(error => {
+        console.error(error);
+        alert("Ooopss! Error occured.")
+      });
     };
 
     const toggleDateDropdown = () => setDateDropdownOpen(!dateDropdownOpen);
@@ -27,21 +54,21 @@ function ToMeLetter() {
     const handleDateChange = (value, formattedValue) => {
       setSelectedDate(formattedValue);
       if (formattedValue){
-        setDeliveryTime(`on ${formattedValue}`);
+        setDeliveryDate(`on ${formattedValue}`);
       } else{
-        setDeliveryTime('');
+        setDeliveryDate('');
       }
       setDateDropdownOpen(false);
     };
 
     const handleBirthdayChange = (value, formattedValue) => {
         setSelectedBirthday(formattedValue);
-        // Check if formattedValue is truthy before setting deliveryTime
+        // Check if formattedValue is truthy before setting deliveryDate
         if (formattedValue) {
-          setDeliveryTime(`on birthday (${formattedValue})`);
+          setDeliveryDate(`on birthday (${formattedValue})`);
         } else {
-          // Set deliveryTime to an empty string or a default message if no date is selected
-          setDeliveryTime('');
+          // Set deliveryDate to an empty string or a default message if no date is selected
+          setDeliveryDate('');
         }
         setBirthdayDropdownOpen(false);
       };
@@ -72,8 +99,8 @@ function ToMeLetter() {
                 <div className="card-body">
                   <Input
                     type="textarea"
-                    value={letterContent}
-                    onChange={(e) => setLetterContent(e.target.value)}
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
                     placeholder="Hey, so today I..."
                     rows={10}
                     className="mb-2"
@@ -87,15 +114,15 @@ function ToMeLetter() {
           </Row>
           <Row className="mb-4">
           <Col md={12}>
-              <h5 className="mb-3">Deliver: {deliveryTime}</h5>
+              <h5 className="mb-3">Deliver: {deliveryDate}</h5>
               {!selectedDate && !selectedBirthday && (
                 <>
                   {["6 months", "1 year", "3 years", "5 years", "10 years"].map((time) => (
                     <Button
                       key={time}
-                      onClick={() => setDeliveryTime(time)}
+                      onClick={() => setDeliveryDate(time)}
                       className="mr-2 mb-2"
-                      style={{backgroundColor:deliveryTime === time ? "#FE4632" : "#ECDCD0", borderRadius:'50px'}}
+                      style={{backgroundColor:deliveryDate === time ? "#FE4632" : "#ECDCD0", borderRadius:'50px'}}
                     >
                       {time}
                     </Button>

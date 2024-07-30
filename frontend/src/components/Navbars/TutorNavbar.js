@@ -21,6 +21,12 @@ import {
 function TutorNavbar() {
   const [navbarColor, setNavbarColor] = React.useState("bg-white");
   const [collapseOpen, setCollapseOpen] = React.useState(false);
+  const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        await logout();
+        navigate('./Login');
+    };
 
   React.useEffect(() => {
     const updateNavbarColor = () => {
@@ -78,7 +84,7 @@ function TutorNavbar() {
               </InputGroup>
             </NavItem>
             <NavItem className="mr-2">
-              <Button className="nav-link" style={{borderRadius:"50px", backgroundColor:"#FF6F42", fontWeight:"bold"}}>
+              <Button className="nav-link" onClick={'./tutor-home'} style={{borderRadius:"50px", backgroundColor:"#FF6F42", fontWeight:"bold"}}>
                 ADD STUDENT
               </Button>
             </NavItem>
@@ -88,7 +94,12 @@ function TutorNavbar() {
                   DASHBOARD
                 </DropdownToggle>
                 <DropdownMenu right>
-                  {/* Your dashboard dropdown items */}
+                  <DropdownItem>
+                  Hi 'user.first_name user.last_name'
+                    </DropdownItem>
+                    <DropdownItem  onClick={handleLogout} target="_blank">
+                      Sign out
+                      </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
             </NavItem>

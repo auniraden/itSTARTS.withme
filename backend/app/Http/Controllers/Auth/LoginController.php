@@ -72,8 +72,6 @@ class LoginController extends Controller
         $frontendBaseUrl = env('FRONTEND_URL','http://localhost:3000');
         $roleHomeUrls = [
             1 => '/homeschooler',
-            2 => '/parents-home',
-            3 => '/tutor-home',
         ];
 
         return $frontendBaseUrl . ($roleHomeUrls[$user->role->id] ?? '/');

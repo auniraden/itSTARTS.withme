@@ -1,8 +1,20 @@
 import React from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Container, Row, Col, Badge } from "reactstrap";
 
 function FocusZone() {
+  const [date, setDate] = useState("");
+
+  useEffect(() => {
+   // Set today's date and day
+   const today = new Date();
+   const day = today.toLocaleDateString('en-US', { weekday: 'long' });
+   const formattedDate = today.toLocaleDateString('en-US');
+   setDate(`${day}, ${formattedDate}`);
+  }, []);
+
   return (
     <Container className="content-wrapper"> {/* Use your template's container class */}
       <h1 className="heading-large text-center">Focus Zone</h1>
@@ -73,15 +85,11 @@ function FocusZone() {
             </div>
           </div>
         </Col>
-        <Col md={3}>
-          <div className="card text-center" style={{backgroundColor:'#FFB9B2', borderRadius:'20px'}}>
-            <div className="card-body">
-              <h5 className="card-title">Here</h5>
-              <h2 className="card-subtitle mb-2">GG</h2>
-              <p className="card-text">Calendar display</p>
-            </div>
-          </div>
-        </Col>
+        <Col md={3} className="text-right" style={{display:'flex', justifyContent:'flex-end'}}>
+                    <div style={{backgroundColor:'#FFB9B2', color:'#640900', fontWeight:'bold', borderRadius:'20px', width:'300px', height:'150px', display:'flex', justifyContent:"center", alignItems:'center'}}>
+                        <h4>{date}</h4>
+                    </div>
+                </Col>
       </Row>
     </Container>
   );
