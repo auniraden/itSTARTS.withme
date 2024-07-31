@@ -164,7 +164,8 @@ const updateProgress = async (index, checked) => {
           />
           <CardBody className="d-flex flex-column">
             <CardTitle tag="h5" style={{fontWeight:'bold'}}>
-            {curriculum ? curriculum.curriculum_name : "Loading..."}
+            {/* {curriculum ? curriculum.curriculum_name : "Loading..."} */}
+            SPM - Sijil Pelajaran Malaysia
             </CardTitle>
             <CardSubtitle tag="h6" className="mb-2" style={{overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'normal', color:'#D09E79'}}>
               Stay updated with your curriculum syllabus.
@@ -180,7 +181,9 @@ const updateProgress = async (index, checked) => {
                   borderRadius: "50px",
                   fontWeight: "bold"
                 }}
-                onClick={() => window.open(curriculum ? curriculum.link : "#", "_blank")}
+                /*() => window.open(curriculum ? curriculum.link : "#"*/
+                onClick={() => window.open("https://sppat2.moe.gov.my/cp/spm/cpindex.asp", "_blank")}
+
               >
                 Access now
                 <i

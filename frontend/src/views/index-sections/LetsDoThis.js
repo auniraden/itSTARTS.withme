@@ -7,7 +7,6 @@ import {
   Container,
 } from "reactstrap";
 
-import StudentTasks from "./StudentTasks";
 
 function LetsDoThis() {
   const scrollRef = useRef(null);
@@ -76,7 +75,6 @@ function LetsDoThis() {
                 }}
                 onScroll={handleScroll}
               >
-                <StudentTasks/>
               </div>
             </div>
         </>

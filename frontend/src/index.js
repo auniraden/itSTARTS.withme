@@ -1,3 +1,10 @@
+/**
+ * NUR SYAFIQAH AUNI SHAHARUDIN
+ * TP066621
+ * APU3F2311SE
+ */
+
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
@@ -17,34 +24,17 @@ import LandingPage from "views/examples/LandingPage.js";
 import ProfilePage from "views/examples/ProfilePage.js";
 import ItStartsRoles from "views/pages/ItStartsRoles";
 import SignUpHomeschooler from "views/pages/SignUpHomeschooler";
-import SignUpParents from "views/pages/SignUpParents";
-import SignUpTutor from "views/pages/SignUpTutors";
 import Login from "views/pages/Login";
 import Homeschooler from "views/pages/Homeschooler";
 import EmailVerification from "views/index-sections/EmailVerification";
-import ParentsHome from "views/pages/ParentsHome";
-import TutorHome from "views/pages/TutorHome";
 import RegistrationSuccess from "views/index-sections/RegistrationSuccess";
 import LoginSuccess from "views/index-sections/LoginSuccess";
 import WaitingApproval from "views/index-sections/WaitingApproval";
-import FindTutor from "views/pages/FindTutor";
+
 
 // Set the base URL for axios
 axios.defaults.baseURL = 'http://127.0.0.1:8000';
 
-// Add a request interceptor to include the token in the headers
-// axios.interceptors.request.use(
-//   (request) => {
-//     const token = localStorage.getItem('token');
-//     if (token) {
-//       request.headers['Authorization'] = `Bearer ${token}`;
-//     }
-//     return request;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -58,17 +48,13 @@ root.render(
       <Route path="/profile-page" element={<ProfilePage />} />
       <Route path="/it-starts-roles" element={<ItStartsRoles />} />
       <Route path="/sign-up-homeschooler" element={<SignUpHomeschooler />} />
-      <Route path="/sign-up-parents" element={<SignUpParents />} />
-      <Route path="/sign-up-tutor" element={<SignUpTutor />} />
       <Route path="/login" element={<Login />} />
       <Route path="/homeschooler" element={<Homeschooler />} />
       <Route path="/email/verify/:userId/:token" element={<EmailVerification />} />
-      <Route path="/parents-home" element={<ParentsHome />} />
-      <Route path="/tutor-home" element={<TutorHome />} />
       <Route path="/registration-success" element={<RegistrationSuccess />} />
       <Route path="/login-success" element={<LoginSuccess />} />
       <Route path="/waiting-approval" element={<WaitingApproval />} />
-      <Route path="/find-tutor" element={<FindTutor />} />
+
 
 
 

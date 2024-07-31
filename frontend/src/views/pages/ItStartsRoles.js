@@ -90,27 +90,13 @@ function ItStartsRoles() {
                   </CardTitle>
                 </CardHeader>
                 <CardBody className="text-center">
-                  <p className="text-muted mb-4">But first, let us know who you are</p>
+                  <p className="text-muted mb-4">Hi homeschoolers!</p>
                   <Button
                     className="btn-round btn-lg mb-3 btn-primary"
                     block
                     onClick={() => handleRoleSelection("homeschooler")}
                   >
-                    ME: The Homeschooler
-                  </Button>
-                  <Button
-                    className="btn-round btn-lg mb-3 btn-primary"
-                    block
-                    onClick={() => handleRoleSelection("parents")}
-                  >
-                    Parents
-                  </Button>
-                  <Button
-                    className="btn-round btn-lg mb-3 btn-primary"
-                    block
-                    onClick={() => handleRoleSelection("tutor")}
-                  >
-                    Tutors
+                    Let's get started!
                   </Button>
                 </CardBody>
                 <CardFooter>

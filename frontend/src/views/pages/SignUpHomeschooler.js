@@ -24,7 +24,7 @@ import {
 } from "reactstrap";
 import SignupNavbar from "components/Navbars/SignupNavbar";
 
-axios.defaults.baseURL = 'http://127.0.0.1:8000'; // Adjust if your API base URL is different
+axios.defaults.baseURL = 'http://127.0.0.1:8000'; // Adjust API base URL is different
 
 
 //Function to fetch CSRF token and set up Axios

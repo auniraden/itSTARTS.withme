@@ -21,8 +21,6 @@ Route::middleware([
     SubstituteBindings::class,
     ])->group(function () {
         Route::post('/register/homeschooler', [RegisterController::class, 'registerHomeschooler']);
-        Route::post('/register/parent', [RegisterController::class, 'registerParent']);
-        Route::post('/register/tutor', [RegisterController::class, 'registerTutor']);
         Route::post('/select-role', [RoleSelectionController::class, 'selectRole']);
 
 });
@@ -38,7 +36,6 @@ Route::post('/login', [LoginController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/homeschooler/curriculum', [CurriculumController::class, 'getUserCurriculum']);
-    Route::get('/homeschooler/tutors', [TutorController::class, 'getUserTutors']);
     Route::post('/goals', [GoalController::class, 'store']);
 });
 

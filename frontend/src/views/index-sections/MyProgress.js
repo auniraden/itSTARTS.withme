@@ -47,7 +47,7 @@ function MyProgress() {
     return (
         <Container className="content-wrapper">
             <Row>
-                <Col xs="12" md="8">
+                <Col>
                     <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '20px' }}>
                         <h1 style={{ fontSize: "3rem", color: "#232D22", letterSpacing: "0.01rem", margin: "25px", marginLeft: '7px' }}>
                             My Progress
@@ -57,7 +57,7 @@ function MyProgress() {
                         </p>
                         <div style={{ backgroundColor: 'white', height: '550px', borderRadius: '20px', padding: '20px' }}>
                             <Row className="justify-content-center">
-                                <Col xs="12" md="8">
+                                <Col>
                                     <div style={{ marginBottom: '20px', textAlign: 'center' }}>
                                         <Button
                                             onClick={() => handleViewChange('today-tasks')}

@@ -78,9 +78,10 @@ function ParentsHomeschoolerNavbar() {
                 </DropdownToggle>
                 <DropdownMenu right>
                 <DropdownItem>
-                      Hi 'user.first_name user.last_name'
+                      Hi Auni Shah
                     </DropdownItem>
-                    <DropdownItem  /*onClick={handleLogout}*/ target="_blank">
+                    <DropdownItem onClick={() => window.location.href = './Login'}>
+
                       Sign out
                     </DropdownItem>
                 </DropdownMenu>

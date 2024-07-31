@@ -101,24 +101,6 @@ function SignupNavbar() {
                 </UncontrolledDropdown>
               </NavItem>
               <NavItem>
-                <UncontrolledDropdown nav>
-                  <DropdownToggle caret color="primary" nav>
-                    <i className="now-ui-icons objects_planet mr-1"></i>
-                    <p>EXPLORE</p>
-                  </DropdownToggle>
-                  <DropdownMenu>
-                    <DropdownItem to="/index" tag={Link}>
-                      <i className="now-ui-icons education_paper mr-1"></i>
-                      Tutors
-                    </DropdownItem>
-                    <DropdownItem href="#pablo" target="_blank">
-                      <i className="now-ui-icons ui-2_favourite-28 mr-1"></i>
-                      Read blog
-                    </DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
-              </NavItem>
-              <NavItem>
               <Link  to="/login">
                     <Button
                         className="nav-link btn-neutral"
