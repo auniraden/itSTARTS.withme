@@ -20,7 +20,7 @@ import {
 } from "reactstrap";
 
 // Set the base URL for all axios requests
-axios.defaults.baseURL = 'http://127.0.0.1:8000';
+axios.defaults.baseURL = 'http://localhost:8000';
 // Set withCredentials to true if using cookies for authentication
 axios.defaults.withCredentials = true;
 
@@ -33,23 +33,19 @@ function StudentClasses() {
 
 
 // Fetch and set CSRF token
-const setCsrfToken = async () => {
+const setupAxios = async () => {
   try {
-    await axios.get('/sanctum/csrf-cookie');
-    // CSRF token should now be set in cookies automatically
+    const response = await axios.get('http://127.0.0.1:8000/csrf-token');
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = response.data.token;
+    axios.defaults.withCredentials = true; // Include credentials with requests
   } catch (error) {
-    console.error("Error fetching CSRF token", error);
+    console.error('Error fetching CSRF token:', error);
   }
 };
 
+
 useEffect(() => {
-  // // Retrieve the token from local storage or wherever you store it
-  // const token = localStorage.getItem('authToken');
-
-  // // Set the Authorization header for axios requests
-  // if (token) {
-  //   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
+  setupAxios();
     // Fetch user curriculum from the backend
     axios.get('/api/homeschooler/curriculum') // Assuming this endpoint returns the user's curriculum
       .then(response => {
@@ -84,7 +80,7 @@ const saveGoals = async () => {
   }
 
   try {
-    const response = await axios.post('http://127.0.0.1:8000/api/goals',
+    const response = await axios.post('http://localhost:8000/api/goals',
       { goals },
       {
         headers: {
@@ -108,7 +104,7 @@ const updateProgress = async (index, checked) => {
   const progressPercentage = checkedCount === 1 ? 30 : (checkedCount === 2 ? 70 : 100);
 
   try {
-    await setCsrfToken();
+    await setupAxios();
     await axios.put(`/api/goals/${newSavedGoals[index].id}`, { progress: progressPercentage });
     setSavedGoals(newSavedGoals);
   } catch (error) {
@@ -164,8 +160,7 @@ const updateProgress = async (index, checked) => {
           />
           <CardBody className="d-flex flex-column">
             <CardTitle tag="h5" style={{fontWeight:'bold'}}>
-            {/* {curriculum ? curriculum.curriculum_name : "Loading..."} */}
-            SPM - Sijil Pelajaran Malaysia
+            {curriculum ? curriculum.curriculum_name : "Loading..."}
             </CardTitle>
             <CardSubtitle tag="h6" className="mb-2" style={{overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'normal', color:'#D09E79'}}>
               Stay updated with your curriculum syllabus.
@@ -181,8 +176,7 @@ const updateProgress = async (index, checked) => {
                   borderRadius: "50px",
                   fontWeight: "bold"
                 }}
-                /*() => window.open(curriculum ? curriculum.link : "#"*/
-                onClick={() => window.open("https://sppat2.moe.gov.my/cp/spm/cpindex.asp", "_blank")}
+                onClick={() => curriculum && curriculum.link && window.open(curriculum.link)}
 
               >
                 Access now

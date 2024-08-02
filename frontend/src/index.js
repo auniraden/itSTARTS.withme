@@ -1,10 +1,3 @@
-/**
- * NUR SYAFIQAH AUNI SHAHARUDIN
- * TP066621
- * APU3F2311SE
- */
-
-
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";

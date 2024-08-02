@@ -78,7 +78,7 @@ function ParentsHomeschoolerNavbar() {
                 </DropdownToggle>
                 <DropdownMenu right>
                 <DropdownItem>
-                      Hi Auni Shah
+                      Hi user.first_name user.last_name
                     </DropdownItem>
                     <DropdownItem onClick={() => window.location.href = './Login'}>
 
