@@ -36,16 +36,16 @@ function Index() {
           minHeight: "700px",
         }}
       >
-      <div className="wrapper">
 
-        <div className="main">
+
+
           <Container>
           <HomeTop/>
           </Container>
         </div>
-        </div>
 
-      </div>
+
+
     </>
   );
 }

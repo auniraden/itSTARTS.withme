@@ -57,14 +57,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return null;
     }
 
-    // A tutor has many subjects
-    public function tutorSubjects()
-    {
-        if ($this->role_id == 3) { // 3 is the role_id for tutors
-            return $this->hasMany(TutorSubject::class, 'tutor_id');
-        }
-        return null;
-    }
+
 
     // A student has many progress reports
     public function progressReports()
@@ -84,14 +77,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return null;
     }
 
-    // A parent has many invoices
-    public function invoices()
-    {
-        if ($this->role_id == 2) { //2 is the role_id for parents
-            return $this->hasMany(Invoice::class, 'student_id');
-        }
-        return null;
-    }
 
     // A student has many goals
     public function goals()
@@ -102,36 +87,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return null;
     }
 
-    // A parent has many children
-    public function children()
-    {
-        if ($this->role_id == 2) { //  2 is the role_id for parents
-            return $this->hasMany(Child::class, 'parent_id');
-        }
-        return null;
-    }
 
-    // A user has many chats
-    public function chats()
-    {
-        return $this->hasMany(Chat::class, 'user_id');
-    }
 
-    // A tutor has many classes
-    public function classes()
-    {
-        if ($this->role_id == 3) { // 3 is the role_id for tutors
-            return $this->hasMany(ClassModel::class, 'tutor_id');
-        }
-        return null;
-    }
-
-    // A tutor has many qualifications
-    public function qualifications()
-    {
-        if ($this->role_id == 3) { // 3 is the role_id for tutors
-            return $this->hasMany(Qualification::class, 'tutor_id');
-        }
-        return null;
-    }
 }

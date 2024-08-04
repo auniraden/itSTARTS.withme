@@ -24,13 +24,13 @@ import {
 } from "reactstrap";
 import SignupNavbar from "components/Navbars/SignupNavbar";
 
-axios.defaults.baseURL = 'http://127.0.0.1:8000'; // Adjust API base URL is different
+axios.defaults.baseURL = 'http://localhost:8000'; // Adjust API base URL is different
 
 
 //Function to fetch CSRF token and set up Axios
 const setCsrfToken = async () => {
   try {
-    const response = await axios.get('http://127.0.0.1:8000/csrf-token');
+    const response = await axios.get('http://localhost:8000/csrf-token');
     axios.defaults.headers.common['X-CSRF-TOKEN'] = response.data.token;
     axios.defaults.withCredentials = true; // Include credentials with requests
   } catch (error) {

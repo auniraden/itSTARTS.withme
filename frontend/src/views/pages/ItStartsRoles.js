@@ -20,7 +20,7 @@ import SignupNavbar from "components/Navbars/SignupNavbar";
 //Function to fetch CSRF token and set up Axios
 const setupAxios = async () => {
   try {
-    const response = await axios.get('http://127.0.0.1:8000/csrf-token');
+    const response = await axios.get('http://localhost:8000/csrf-token');
     axios.defaults.headers.common['X-CSRF-TOKEN'] = response.data.token;
     axios.defaults.withCredentials = true; // Include credentials with requests
   } catch (error) {
@@ -49,7 +49,7 @@ function ItStartsRoles() {
   const handleRoleSelection = async (role) => {
     try {
       // Send the selected role to the backend
-      const response = await axios.post('http://127.0.0.1:8000/api/select-role', { role });
+      const response = await axios.post('http://localhost:8000/api/select-role', { role });
       const data = response.data;
       if (data.redirect) {
         navigate(data.redirect); // Redirect to the URL sent by the backend
