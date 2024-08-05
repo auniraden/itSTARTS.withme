@@ -10,14 +10,15 @@ class Resource extends Model
     use HasFactory;
 
     protected $fillable = [
+        'email',
         'link',
         'description',
-        'student_id'
+        'created_at',
+        'updated_at',
     ];
 
-    // A resource belongs to a student (user)
-    public function student()
+    public function users()
     {
-        return $this->belongsTo(User::class, 'student_id');
+        return $this->belongsTo(User::class, 'email', 'email');
     }
 }

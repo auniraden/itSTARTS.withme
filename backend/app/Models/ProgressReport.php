@@ -16,8 +16,8 @@ class ProgressReport extends Model
     ];
 
     // Define the relationship with the User model
-    public function student()
+    public function users()
     {
-        return $this->belongsTo(User::class, 'student_id');
+        return $this->belongsTo(User::class, 'email', 'email');
     }
 }

@@ -14,9 +14,8 @@ class Curriculum extends Model
         'link',
     ];
 
-    // Define the relationship with the Class model
-    public function classes()
+    public function users()
     {
-        return $this->hasMany(ClassModel::class, 'curriculum_id');
+        return $this->belongsTo(User::class, 'id', 'curriculum_id');
     }
 }

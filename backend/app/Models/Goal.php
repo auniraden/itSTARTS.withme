@@ -10,14 +10,15 @@ class Goal extends Model
     use HasFactory;
 
     protected $fillable = [
-        'student_id',
+        'email',
         'goal_name',
         'progress',
+        'created_at',
+        'updated_at',
     ];
 
-    // Define the relationship with the User model
-    public function student()
+    public function users()
     {
-        return $this->belongsTo(User::class, 'student_id');
+        return $this->belongsTo(User::class, 'email', 'email');
     }
 }
