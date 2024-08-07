@@ -25,8 +25,9 @@ import LoginSuccess from "views/index-sections/LoginSuccess";
 import WaitingApproval from "views/index-sections/WaitingApproval";
 
 
+
 // Set the base URL for axios
-axios.defaults.baseURL = 'http://127.0.0.1:8000';
+axios.defaults.baseURL = 'http://localhost:8000';
 
 
 

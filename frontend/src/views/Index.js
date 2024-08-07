@@ -11,6 +11,8 @@ import LoginNavbar from "components/Navbars/LoginNavbar.js";
 
 // sections for this page
 import HomeTop from "./index-sections/HomeTop.js";
+import Highlights from "./index-sections/Highlights.js";
+import ThisFooterMain from "components/Footers/ThisFooterMain.js";
 
 function Index() {
   React.useEffect(() => {
@@ -41,6 +43,8 @@ function Index() {
 
           <Container>
           <HomeTop/>
+          <Highlights/>
+
           </Container>
         </div>
 

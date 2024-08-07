@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -66,8 +65,7 @@ class LoginController extends Controller
 
         return response()->json(['error' => 'Invalid or expired token'], 400);
     }
-
-    private function determineHomeUrl($user)
+ private function determineHomeUrl($user)
     {
         $frontendBaseUrl = env('FRONTEND_URL','http://localhost:3000');
         $roleHomeUrls = [
