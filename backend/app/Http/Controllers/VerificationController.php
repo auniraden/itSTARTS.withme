@@ -1,9 +1,9 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -11,43 +11,57 @@ class VerificationController extends Controller
 {
     public function verify(Request $request, $id, $token)
     {
-        if (! $request->hasValidSignature()) {
-            Log::error('Invalid verification signature.', ['id' => $id, 'token' => $token]);
-            abort(401); // Unauthorized
+        try {
+            if (!$request->hasValidSignature()) {
+                throw new \Exception('Invalid verification signature.');
+            }
+
+            $user = User::findOrFail($id);
+
+            if ($user->hasVerifiedEmail()) {
+                return redirect($this->redirectTo($user))->with('message', 'Email already verified.');
+            }
+
+            // Verify the token
+            if (sha1($user->email) !== $token) {
+                throw new \Exception('Invalid verification token.');
+            }
+
+            // Mark email as verified
+            $user->markEmailAsVerified();
+            $user->email_verified_at = now();
+            $user->save();
+
+            // Log the user in
+            Auth::login($user);
+            // Clear the email verification token to prevent reuse
+            $user->update(['email_verification_token' => null]);
+
+
+
+            // Redirect to the appropriate homepage based on the user role
+            return redirect($this->redirectTo($user));
+        } catch (\Exception $e) {
+            Log::error('Verification failed: ' . $e->getMessage());
+            return redirect('/error')->with('error', 'Verification failed. Please try again.');
         }
+    }
 
-        $user = User::findOrFail($id);
-
-        if ($user->hasVerifiedEmail()) {
-            return redirect('/')->with('message', 'Email already verified.');
-        }
-
-         // Verify the token
-        if (sha1($user->email) !== $token) {
-            Log::error('Token mismatch.', ['id' => $id, 'token' => $token]);
-            abort(401); // Unauthorized
-        }
-
-        $user->markEmailAsVerified();
-
-        Auth::login($user); // Log the user in
+    protected function redirectTo($user)
+    {
 
 
+        Auth::login($user);
 
-        // Check if the user is a tutor and if they are approved
-        if ($user->role_id === 3 && !$user->is_approved) {
-            Auth::logout();
-            return view('auth.pending-approval'); // Show pending approval page
-        }
-
-        // Determine the user's role and redirect to the appropriate homepage
-        $role = $user->role_id;
-        $frontendBaseUrl = env('FRONTEND_BASE_URL', 'http://127.0.0.1:3000');
-        $redirectUrls = [
+        $frontendBaseUrl = env('FRONTEND_URLS');
+        $roleHomeUrls = [
             1 => '/homeschooler',
         ];
 
-        $redirectUrl = $frontendBaseUrl . ($redirectUrls[$role] ?? '/');
-        return redirect()->away($redirectUrl);
+
+        $redirectUrl = $frontendBaseUrl . ($roleHomeUrls[$user->role->id] ?? '/');
+        Log::info('Redirecting to: ' . $redirectUrl);
+
+        return $redirectUrl;
     }
 }

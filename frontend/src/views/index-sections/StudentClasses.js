@@ -20,6 +20,10 @@ import {
 
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
+axios.defaults.withXSRFToken = true;
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+axios.defaults.headers.common['Content-Type'] = 'application/json';
+
 
 function StudentClasses() {
   const [modalTooltips, setModalTooltips] = useState(false);
@@ -27,27 +31,71 @@ function StudentClasses() {
   const [goals, setGoals] = useState(["", "", ""]);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [accessToken, setAccessToken] =  useState(localStorage.getItem('accessToken'));
 
-  const setupAxios = async () => {
+
+
+
+  const fetchCSRFToken = async () => {
     try {
-      const response = await axios.get('/csrf-token');
-      axios.defaults.headers.common['X-CSRF-TOKEN'] = response.data.token;
+      await axios.get('/sanctum/csrf-cookie');
     } catch (error) {
       console.error('Error fetching CSRF token:', error);
+      throw error;
+    }
+  };
+  // useEffect(() => {
+  //   console.log("user here",user);
+  // }, [user])
+
+  // const getCurriculum = async()=>{
+  //   // const cookie = window.cookie;
+  //   // const token_ = cookie.get('XSRF-TOKEN');
+  //   try{
+  //     const response = await axios.get('/homeschooler/curriculum', {
+  //           //  headers: {
+  //           //   'Authorization': `Bearer ${token_}`
+  //           // },
+  //         })
+  //     setCurriculum(response.data);
+  //   }catch(error){
+  //     console.error("Error fetching the curriculum!", error);
+  //   }
+  // }
+
+  const getCurriculum = async () => {
+    try {
+      await fetchCSRFToken();
+      // Check if accessToken is available
+      if (!accessToken) {
+        throw new Error('Access token is not available');
+      }
+      // Fetch curriculum with authorization token
+      const response = await axios.get('/api/homeschooler/curriculum', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setCurriculum(response.data);
+    } catch (error) {
+      console.error('Error fetching the curriculum!', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    setupAxios();
-    axios.get('/api/homeschooler/curriculum')
-      .then(response => {
-        setCurriculum(response.data);
-      })
-      .catch(error => {
-        console.error("Error fetching the curriculum!", error);
-      });
 
-  }, []);
+  useEffect(() =>{
+    getCurriculum();
+  }, [accessToken]);
+
+  // function getCookie(name) {
+  //   // Split document.cookie into an array of individual cookies
+  //   const value = `; ${document.cookie}`;
+  //   const parts = value.split(`; ${name}=`);
+  //   // If the cookie is found, return its value; otherwise, return null
+  //   if (parts.length === 2) return parts.pop().split(';').shift();
 
   const handleGoalChange = (index, value) => {
     const newGoals = [...goals];
@@ -136,6 +184,7 @@ function StudentClasses() {
                   fontWeight: "bold"
                 }}
                 onClick={() => curriculum && curriculum.link && window.open(curriculum.link)}
+                disabled={loading} // Disable button while loading
               >
                 Access now
                 <i
@@ -229,5 +278,6 @@ function StudentClasses() {
     </Container>
   );
 }
+
 
 export default StudentClasses;

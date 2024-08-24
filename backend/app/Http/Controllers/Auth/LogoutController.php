@@ -9,9 +9,8 @@ class LogoutController extends Controller
 {
     public function logout(Request $request)
     {
-        // Assuming you are using Laravel Sanctum for token authentication
-        $request->user()->currentAccessToken()->delete();
-
+        $user = $request->user();
+        $user->tokens()->delete(); // Revoke all tokens
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
 }

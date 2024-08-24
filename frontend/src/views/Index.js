@@ -44,8 +44,8 @@ function Index() {
           <Container>
           <HomeTop/>
           <Highlights/>
-
           </Container>
+          <ThisFooterMain/>
         </div>
 
 

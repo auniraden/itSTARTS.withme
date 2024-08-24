@@ -15,14 +15,16 @@ import {
 } from "reactstrap";
 import SignupNavbar from "components/Navbars/SignupNavbar";
 
+axios.defaults.baseURL = 'http://localhost:8000'; // Adjust API base URL if needed
+axios.defaults.withCredentials = true; // Include credentials with requests
 
-
-//Function to fetch CSRF token and set up Axios
+// Function to fetch CSRF token and set up Axios
 const setupAxios = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/csrf-token');
+    // Fetch CSRF token
+    const response = await axios.get('/csrf-token');
+    // Set the CSRF token in Axios headers
     axios.defaults.headers.common['X-CSRF-TOKEN'] = response.data.token;
-    axios.defaults.withCredentials = true; // Include credentials with requests
   } catch (error) {
     console.error('Error fetching CSRF token:', error);
   }
@@ -49,7 +51,7 @@ function ItStartsRoles() {
   const handleRoleSelection = async (role) => {
     try {
       // Send the selected role to the backend
-      const response = await axios.post('http://localhost:8000/api/select-role', { role });
+      const response = await axios.post('/api/select-role', { role });
       const data = response.data;
       if (data.redirect) {
         navigate(data.redirect); // Redirect to the URL sent by the backend

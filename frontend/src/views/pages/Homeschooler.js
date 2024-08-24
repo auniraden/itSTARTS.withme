@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-//import axios from "axios";
+import axios from "axios";
 import {
   Badge,
   Container,
@@ -16,19 +16,60 @@ import FocusZone from "views/index-sections/FocusZone";
 import ToMeLetter from "views/index-sections/ToMeLetter";
 import ThisFooterMain from "components/Footers/ThisFooterMain";
 
+axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.withCredentials = true;
+
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+axios.defaults.headers.common['Content-Type'] = 'application/json';
+
 
 function Homeschooler() {
   const [activeTab, setActiveTab] = useState('playground');
 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+
+    if (token) {
+      handleLoginConfirmation(token);
+    } else {
+      const storedToken = localStorage.getItem("accessToken");
+      if (storedToken) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+        getUserData();
+      }
+    }
+  }, []);
+
+  const handleLoginConfirmation = async (token) => {
+    try {
+      localStorage.setItem("accessToken", token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      await getUserData();
+    } catch (error) {
+      console.error("Error confirming login:", error);
+    }
+  };
+
+
+
+  const getUserData = async () => {
+    try {
+        const response = await axios.get('/api/user');
+        console.log('User data:', response.data);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
 
   const renderContent = () => {
     switch (activeTab) {
       case 'playground':
-        return <Playground />;
+        return <Playground/>;
       case 'letsDoThis':
-        return <LetsDoThis />;
+        return <LetsDoThis/>;
       case 'saveResources':
-        return <SaveResources />;
+        return <SaveResources/>;
       default:
         return null;
     }

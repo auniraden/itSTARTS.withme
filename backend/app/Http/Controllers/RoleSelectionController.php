@@ -18,8 +18,6 @@ class RoleSelectionController extends Controller
         // Define the redirection URL based on the role
         $redirectUrls = [
             'homeschooler' => '/sign-up-homeschooler',
-            'parents' => '/sign-up-parents',
-            'tutor' => '/sign-up-tutor',
         ];
 
         $redirectUrl = $redirectUrls[$role] ?? null;

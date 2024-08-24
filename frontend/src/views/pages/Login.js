@@ -24,7 +24,7 @@ axios.defaults.baseURL = 'http://localhost:8000';
 //Function to fetch CSRF token and set up Axios
 const setCsrfToken = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/csrf-token');
+    const response = await axios.get('/sanctum/csrf-cookie');
     axios.defaults.headers.common['X-CSRF-TOKEN'] = response.data.token;
     axios.defaults.withCredentials = true; // Include credentials with requests
   } catch (error) {

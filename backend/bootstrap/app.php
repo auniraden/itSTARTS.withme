@@ -9,7 +9,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Console\Scheduling\Schedule;
 use App\Console\Commands\SendScheduledEmails;
 use Illuminate\Console\Application as ArtisanApplication;
-use App\Http\Middleware\EncryptCookies; // Add this line
+use App\Http\Middleware\EncryptCookies;
 use Illuminate\Http\Request;
 use App\Exceptions\AlreadyAuthenticatedException;
 
@@ -27,11 +27,11 @@ return Application::configure(basePath: dirname(__DIR__))
         }
 
     )
-    ->withMiddleware(function (Middleware $middleware) {
-        $middleware->api(append: [ SubstituteBindings::class,]);
-        $middleware->api(append: [ ThrottleRequests::class,]);
-        $middleware->api(append: [ EnsureFrontendRequestsAreStateful::class,]);
-    })
+    // ->withMiddleware(function (Middleware $middleware) {
+    //     $middleware->api(append: [ SubstituteBindings::class,]);
+    //     $middleware->api(append: [ ThrottleRequests::class,]);
+    //     $middleware->api(append: [ EnsureFrontendRequestsAreStateful::class,]);
+    // })
     ->withMiddleware(function (Middleware $middleware ){
         $middleware->web(append: [
         \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
@@ -40,16 +40,9 @@ return Application::configure(basePath: dirname(__DIR__))
         SubstituteBindings::class,]);
     })
 
-    // ->withMiddleware(function (Middleware $middleware) {
-    //     $middleware->statefulApi();
-    //       $middleware->api([
-    //                 \Illuminate\Session\Middleware\StartSession::class,
-    //                 \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-    //                 \Illuminate\Cookie\Middleware\EncryptCookies::class,
-    //                 \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-    //                 \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
-    //             ]);
-    //         })
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->statefulApi();
+    })
 
     ->withExceptions(function (Exceptions $exceptions) {
         //

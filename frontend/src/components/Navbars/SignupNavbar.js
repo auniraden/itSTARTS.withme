@@ -49,13 +49,15 @@ function SignupNavbar() {
       <Navbar className={`fixed-top ${navbarColor}`} expand="lg" color="white">
         <Container>
           <div className="navbar-translate">
-            <NavbarBrand href="#landing_page" id="navbar-brand">
+            <NavbarBrand id="navbar-brand">
+              <Link to="/Index">
               <img
                 className="rounded"
                 src={require("assets/img/complete_logo.png")}
                 alt="it starts logo"
                 style={{ maxWidth: "110px" }}
               />
+              </Link>
             </NavbarBrand>
             <UncontrolledTooltip placement="bottom" target="#navbar-brand">By auniraden</UncontrolledTooltip>
             <button

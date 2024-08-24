@@ -1,6 +1,9 @@
 import React from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 import {
   Button,
   Collapse,
@@ -19,9 +22,15 @@ import {
   InputGroupText,
 } from "reactstrap";
 
+axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.withCredentials = true;
+axios.defaults.withXSRFToken = true;
+
 function ParentsHomeschoolerNavbar() {
-  const [navbarColor, setNavbarColor] = React.useState("bg-white");
-  const [collapseOpen, setCollapseOpen] = React.useState(false);
+  const [navbarColor, setNavbarColor] = useState("bg-white");
+  const [collapseOpen, setCollapseOpen] = useState(false);
+  const [users, setUser] = useState({ first_name: '', last_name: '' });
+
   const navigate = useNavigate();
 
     // const handleLogout = async () => {
@@ -29,7 +38,17 @@ function ParentsHomeschoolerNavbar() {
     //     navigate('./Login');
     // };
 
-  React.useEffect(() => {
+  const handleLogout = async () => {
+    try {
+      await axios.post('/api/logout');
+      localStorage.removeItem("accessToken"); // Clear the token from local storage
+      navigate('/login'); // Redirect to the login page
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
+  useEffect(() => {
     const updateNavbarColor = () => {
       if (document.documentElement.scrollTop > 399 || document.body.scrollTop > 399) {
         setNavbarColor("");
@@ -44,6 +63,28 @@ function ParentsHomeschoolerNavbar() {
       window.removeEventListener("scroll", updateNavbarColor);
     };
   }, []);
+
+
+
+  useEffect(() => {
+    // Simulating an API call to fetch user data
+    axios.get('/sanctum/csrf-cookie').then(() =>{
+      const fetchUserData = async () => {
+        try {
+          // Replace with your actual API call
+          const response = await axios.get('/api/user');
+          const data = response.json();
+          setUser({ first_name: data.first_name, last_name: data.last_name });
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+
+      fetchUserData();
+    }, []);
+
+    })
+
 
   return (
     <Navbar className={`fixed-top ${navbarColor}`} expand="lg" color="white">
@@ -78,9 +119,9 @@ function ParentsHomeschoolerNavbar() {
                 </DropdownToggle>
                 <DropdownMenu right>
                 <DropdownItem>
-                      Hi user.first_name user.last_name
+                      Hi {users.first_name} {users.last_name}
                     </DropdownItem>
-                    <DropdownItem onClick={() => window.location.href = './Login'}>
+                    <DropdownItem onClick={handleLogout}>
 
                       Sign out
                     </DropdownItem>
