@@ -14,6 +14,7 @@ use App\Http\Controllers\GoalController;
 use App\Http\Controllers\LetterController;
 use App\Http\Controllers\Auth\LogoutController;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\UserController;
 
 // Registration routes
 // Route::middleware([
@@ -42,9 +43,11 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 //     return response()->json(['status' => 'Session exists']);
 // });
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// })->middleware('auth:sanctum');
+
+Route::get('/user', [UserController::class, 'getUserData'])->middleware('auth:sanctum');
 
 Route::post('/logout', [LogoutController::class, 'logout'])->middleware('auth:sanctum');
 

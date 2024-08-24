@@ -1,11 +1,9 @@
 import React from "react";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import {
-  Button,
   Collapse,
   DropdownToggle,
   DropdownMenu,
@@ -16,37 +14,48 @@ import {
   NavItem,
   Nav,
   Container,
-  Input,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
 } from "reactstrap";
 
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
-axios.defaults.withXSRFToken = true;
+
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 function ParentsHomeschoolerNavbar() {
   const [navbarColor, setNavbarColor] = useState("bg-white");
   const [collapseOpen, setCollapseOpen] = useState(false);
-  const [users, setUser] = useState({ first_name: '', last_name: '' });
+  const [userData, setUserData] = useState({ first_name: '', last_name: ''});
 
   const navigate = useNavigate();
 
-    // const handleLogout = async () => {
-    //     await logout();
-    //     navigate('./Login');
-    // };
 
   const handleLogout = async () => {
     try {
       await axios.post('/api/logout');
       localStorage.removeItem("accessToken"); // Clear the token from local storage
-      navigate('/login'); // Redirect to the login page
+      navigate('/index'); // Redirect to the login page
     } catch (error) {
       console.error('Error logging out:', error);
     }
   };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try{
+        const token = localStorage.getItem("accessToken");
+        if(token){
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          const response = await axios.get('/api/user');
+          setUserData(response.data);
+        }
+      }catch (error){
+        console.error('Error fetching user data:', error);
+      }
+    }
+    fetchUserData();
+  }, []);
+
 
   useEffect(() => {
     const updateNavbarColor = () => {
@@ -66,26 +75,6 @@ function ParentsHomeschoolerNavbar() {
 
 
 
-  useEffect(() => {
-    // Simulating an API call to fetch user data
-    axios.get('/sanctum/csrf-cookie').then(() =>{
-      const fetchUserData = async () => {
-        try {
-          // Replace with your actual API call
-          const response = await axios.get('/api/user');
-          const data = response.json();
-          setUser({ first_name: data.first_name, last_name: data.last_name });
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-        }
-      };
-
-      fetchUserData();
-    }, []);
-
-    })
-
-
   return (
     <Navbar className={`fixed-top ${navbarColor}`} expand="lg" color="white">
       <Container fluid>
@@ -97,20 +86,6 @@ function ParentsHomeschoolerNavbar() {
           />
         </NavbarBrand>
         <Collapse isOpen={collapseOpen} navbar>
-          <Nav navbar className="mr-auto">
-            <NavItem>
-              <UncontrolledDropdown nav>
-                <DropdownToggle nav caret>
-                  CURRICULUM
-                </DropdownToggle>
-                <DropdownMenu>
-                <DropdownItem>
-                      curriculums.curriculum_name
-                    </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
-            </NavItem>
-          </Nav>
           <Nav navbar className="ml-auto">
             <NavItem>
               <UncontrolledDropdown nav>
@@ -119,7 +94,7 @@ function ParentsHomeschoolerNavbar() {
                 </DropdownToggle>
                 <DropdownMenu right>
                 <DropdownItem>
-                      Hi {users.first_name} {users.last_name}
+                      Hi, {userData.first_name} {userData.last_name} !
                     </DropdownItem>
                     <DropdownItem onClick={handleLogout}>
 

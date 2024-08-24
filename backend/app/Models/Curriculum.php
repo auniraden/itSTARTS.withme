@@ -9,6 +9,7 @@ class Curriculum extends Model
 {
     use HasFactory;
 
+    protected $table = 'curriculums';
     protected $fillable = [
         'curriculum_name',
         'link',

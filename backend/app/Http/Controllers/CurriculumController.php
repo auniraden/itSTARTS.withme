@@ -21,3 +21,8 @@ class CurriculumController extends Controller
         }
     }
 }
+
+// 'curriculum_name' => $user->curriculum->curriculum_name, // Accessing the related curriculum name
+// $user = User::with('curriculum')
+//         ->where('id', $request->user()->id)
+//         ->first();
