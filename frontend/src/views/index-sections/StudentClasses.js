@@ -21,81 +21,45 @@ import {
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
 axios.defaults.withXSRFToken = true;
+
+
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
 function StudentClasses() {
   const [modalTooltips, setModalTooltips] = useState(false);
-  const [curriculum, setCurriculum] = useState(null);
+  const [curriculum, setCurriculum] = useState({curriculum_name:'', link:''});
   const [goals, setGoals] = useState(["", "", ""]);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
-  const [accessToken, setAccessToken] =  useState(localStorage.getItem('accessToken'));
 
-
-
-
-  const fetchCSRFToken = async () => {
+  const getCsrfToken = async () => {
     try {
-      await axios.get('/sanctum/csrf-cookie');
+      await axios.get('/sanctum/csrf-cookie'); // Fetch CSRF token
     } catch (error) {
       console.error('Error fetching CSRF token:', error);
-      throw error;
-    }
-  };
-  // useEffect(() => {
-  //   console.log("user here",user);
-  // }, [user])
-
-  // const getCurriculum = async()=>{
-  //   // const cookie = window.cookie;
-  //   // const token_ = cookie.get('XSRF-TOKEN');
-  //   try{
-  //     const response = await axios.get('/homeschooler/curriculum', {
-  //           //  headers: {
-  //           //   'Authorization': `Bearer ${token_}`
-  //           // },
-  //         })
-  //     setCurriculum(response.data);
-  //   }catch(error){
-  //     console.error("Error fetching the curriculum!", error);
-  //   }
-  // }
-
-  const getCurriculum = async () => {
-    try {
-      await fetchCSRFToken();
-      // Check if accessToken is available
-      if (!accessToken) {
-        throw new Error('Access token is not available');
-      }
-      // Fetch curriculum with authorization token
-      const response = await axios.get('/api/homeschooler/curriculum', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      setCurriculum(response.data);
-    } catch (error) {
-      console.error('Error fetching the curriculum!', error);
-    } finally {
-      setLoading(false);
     }
   };
 
 
-  useEffect(() =>{
-    getCurriculum();
-  }, [accessToken]);
+  useEffect(() => {
+    const fetchCurriculumData = async () =>{
+      try{
+        const token = localStorage.getItem("accessToken");
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        const response = await axios.get('/api/homeschooler/curriculum');
+        setCurriculum(response.data);
+        setLoading(false); //set loading to false after fetching data
+    }catch (error){
+      console.error('Error fetching user data:', error);
+      setLoading(false);  // Set loading to false in case of error
+    }
+  }
+  fetchCurriculumData();
+  },[]);
 
-  // function getCookie(name) {
-  //   // Split document.cookie into an array of individual cookies
-  //   const value = `; ${document.cookie}`;
-  //   const parts = value.split(`; ${name}=`);
-  //   // If the cookie is found, return its value; otherwise, return null
-  //   if (parts.length === 2) return parts.pop().split(';').shift();
 
   const handleGoalChange = (index, value) => {
     const newGoals = [...goals];
@@ -103,20 +67,30 @@ function StudentClasses() {
     setGoals(newGoals);
   };
 
+
   const saveGoals = async () => {
-    if (goals.filter(goal => goal.trim() !== "").length > 3) {
+    const validGoals = goals.filter(goal => goal.trim() !== "");
+
+    if (validGoals.length > 3) {
       setError("Only 3 goals can be made for today!");
       return;
     }
 
     try {
-      const response = await axios.post('/api/goals', { goals });
+      // Fetch CSRF token
+      await getCsrfToken();
+
+      // Now make the POST request to save goals
+      const response = await axios.post('/api/goals', { goals: validGoals });
       setMessage(response.data.message);
+      setError("");
     } catch (error) {
       console.error('Error saving the goals!', error);
-      setError("There was an error saving the goals!");
+      setError(error.response?.data?.message || "There was an error saving the goals!");
+      setMessage("");
     }
   };
+
 
   return (
     <Container fluid>

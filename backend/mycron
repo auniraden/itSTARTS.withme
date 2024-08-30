@@ -1,0 +1,2 @@
+0 9 * * * /Users/auniraden/Desktop/itSTARTS.withme/backend/artisan schedule:run >> /dev/null 2>&1
+

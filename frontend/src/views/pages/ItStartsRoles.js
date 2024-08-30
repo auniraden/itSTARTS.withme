@@ -17,6 +17,7 @@ import SignupNavbar from "components/Navbars/SignupNavbar";
 
 axios.defaults.baseURL = 'http://localhost:8000'; // Adjust API base URL if needed
 axios.defaults.withCredentials = true; // Include credentials with requests
+axios.defaults.withXSRFToken = true;
 
 // Function to fetch CSRF token and set up Axios
 const setupAxios = async () => {

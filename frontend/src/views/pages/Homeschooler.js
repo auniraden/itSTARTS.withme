@@ -121,19 +121,6 @@ function Homeschooler() {
               >
                 Let's do this!
               </Badge>
-              <Badge
-                pill
-                onClick={() => setActiveTab('saveResources')}
-                style={{
-                  backgroundColor: activeTab === 'saveResources' ? "#FF8DC4" : "#ECDCD0",
-                  cursor: 'pointer',
-                  margin: '0 10px',
-                  padding: '10px 15px',
-                  borderRadius: '50px'
-                }}
-              >
-                Save resources
-              </Badge>
             </Col>
           </Row>
           <Row style={{ marginTop: "20px" }}>
@@ -144,9 +131,6 @@ function Homeschooler() {
         </Container>
         <div style={{ backgroundColor: 'white', margin: '12rem', borderRadius: '20px', padding: '50px', marginTop: '2rem', marginBottom: '2rem', paddingTop: '5px' }}>
           <MySchedule />
-        </div>
-        <div style={{ backgroundColor: 'white', margin: '12rem', borderRadius: '20px', padding: '50px', marginTop: '2rem', marginBottom: '2rem', paddingTop: '5px' }}>
-          <MyProgress />
         </div>
         <FocusZone />
         <div style={{ margin: '50px' }}></div>

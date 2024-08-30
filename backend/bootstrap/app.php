@@ -37,7 +37,8 @@ return Application::configure(basePath: dirname(__DIR__))
         \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        SubstituteBindings::class,]);
+        SubstituteBindings::class,
+        \Illuminate\Http\Middleware\HandleCors::class,]);
     })
 
     ->withMiddleware(function (Middleware $middleware) {

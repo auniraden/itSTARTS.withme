@@ -6,13 +6,14 @@ import React from "react";
 } from "reactstrap";
 
 // core components
-import LoginNavbar from "components/Navbars/LoginNavbar.js";
+import SignupNavbar from "components/Navbars/SignupNavbar.js";
 //import ThisFooterMain from "components/Footers/ThisFooterMain.js";
 
 // sections for this page
 import HomeTop from "./index-sections/HomeTop.js";
 import Highlights from "./index-sections/Highlights.js";
 import ThisFooterMain from "components/Footers/ThisFooterMain.js";
+
 
 function Index() {
   React.useEffect(() => {
@@ -28,7 +29,7 @@ function Index() {
   });
   return (
     <>
-      <LoginNavbar />
+      <SignupNavbar />
       <div
         className="section"
         style={{

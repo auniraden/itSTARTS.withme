@@ -15,13 +15,13 @@ Route::get('/', function () {
 
 
 // Apply web middleware to CSRF token endpoint
-// Route::middleware(['web'])->group(function () {
-//     Route::get('/csrf-token', function () {
-//         return response()->json(['token' => csrf_token()]);
+Route::middleware(['web'])->group(function () {
+    Route::get('/csrf-token', function () {
+        return response()->json(['token' => csrf_token()]);
 
 
-//     });
-// });
+    });
+});
 
 
 

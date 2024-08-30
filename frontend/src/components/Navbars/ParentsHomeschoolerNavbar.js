@@ -29,9 +29,18 @@ function ParentsHomeschoolerNavbar() {
 
   const navigate = useNavigate();
 
+  const getCsrfToken = async () => {
+    try {
+      await axios.get('/sanctum/csrf-cookie'); // Fetch CSRF token
+    } catch (error) {
+      console.error('Error fetching CSRF token:', error);
+    }
+  };
 
   const handleLogout = async () => {
     try {
+      await getCsrfToken();
+
       await axios.post('/api/logout');
       localStorage.removeItem("accessToken"); // Clear the token from local storage
       navigate('/index'); // Redirect to the login page

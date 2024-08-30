@@ -50,15 +50,22 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::get('/user', [UserController::class, 'getUserData'])->middleware('auth:sanctum');
 
 Route::post('/logout', [LogoutController::class, 'logout'])->middleware('auth:sanctum');
+Route::get('/homeschooler/curriculum', [CurriculumController::class, 'getUserCurriculum'])->middleware('auth:sanctum');
+Route::post('/goals', [GoalController::class, 'store'])->middleware('auth:sanctum');
+Route::get('/myGoals', [GoalController::class, 'getUserGoals'])->middleware('auth:sanctum');
+Route::delete('/deleteGoal/{id}', [GoalController::class, 'deleteGoal']);
+Route::post('/dearmeletters', [LetterController::class, 'store'])->middleware('auth:sanctum');
+
+
 
 
 // Authenticated routes
 Route::middleware('auth:sanctum')->group(function () {
 
 
-    Route::get('/homeschooler/curriculum', [CurriculumController::class, 'getUserCurriculum']);
-    Route::post('/goals', [GoalController::class, 'store']);
-    Route::post('/dearmeletters', [LetterController::class, 'store']);
+    // Route::get('/homeschooler/curriculum', [CurriculumController::class, 'getUserCurriculum']);
+    // Route::post('/goals', [GoalController::class, 'store']);
+    // Route::post('/dearmeletters', [LetterController::class, 'store']);
     // Route::post('/logout', [LogoutController::class, 'logout']);
     // Route::get('/user', function (Request $request) {
     //     return $request->user();

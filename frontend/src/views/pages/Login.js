@@ -19,19 +19,21 @@ import {
   Col
 } from "reactstrap";
 import LoginNavbar from "components/Navbars/LoginNavbar";
+
 axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.withCredentials = true;
+
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 //Function to fetch CSRF token and set up Axios
 const setCsrfToken = async () => {
   try {
-    const response = await axios.get('/sanctum/csrf-cookie');
-    axios.defaults.headers.common['X-CSRF-TOKEN'] = response.data.token;
-    axios.defaults.withCredentials = true; // Include credentials with requests
+    await axios.get('/sanctum/csrf-cookie');
   } catch (error) {
     console.error('Error fetching CSRF token:', error);
   }
 };
-
 function Login() {
   const [email, setEmail] = useState('');
   const [emailFocus, setEmailFocus] = useState(false);
@@ -50,7 +52,6 @@ function Login() {
       document.body.classList.remove("sidebar-collapse");
     };
   }, []);
-
 
 
   const handleSubmit = async (e) => {
@@ -76,6 +77,26 @@ function Login() {
       setLoading(false); // Set loading to false when the request finishes
   }
 };
+
+// const handleSubmit = async (e) => {
+//   e.preventDefault();
+//   setLoading(true);
+//   try {
+//     await setCsrfToken(); // Fetch CSRF token before login
+//     const response = await axios.post('/api/login', { email });
+//     setMessage('Please check your email for the login link.', response.data);
+//     navigate('/login-success');
+//   } catch (error) {
+//     console.error('Error sending login link:', error);
+//     if (error.response && error.response.status === 401) {
+//       alert("Invalid email address. Please try again.");
+//     } else {
+//       alert('There was an error sending the login link. Please try again.');
+//     }
+//   } finally {
+//     setLoading(false);
+//   }
+// };
 
   return (
     <>

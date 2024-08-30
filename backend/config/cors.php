@@ -3,9 +3,9 @@
 return [
     'paths' => ['*','api/*', 'sanctum/csrf-cookie', '/csrf-token'],
 
-    'allowed_methods' => ['*'],
+    'allowed_methods' => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 
-    'allowed_origins' => [env('http://localhost:3000')],
+    'allowed_origins' => [env('http://localhost:3000'),],
     // explode(',', env('FRONTEND_URLS')),
 
     'allowed_origins_patterns' => [],

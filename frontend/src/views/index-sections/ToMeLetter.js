@@ -5,8 +5,12 @@ import { useEffect } from "react";
 import { Container, Row, Col, Input, Button, Dropdown, DropdownToggle, DropdownMenu } from "reactstrap";
 import { DatePicker } from "reactstrap-date-picker";
 
-axios.defaults.baseURL = 'http://127.0.0.1:8000';
+axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
+axios.defaults.withXSRFToken = true;
+
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
 
@@ -23,55 +27,67 @@ function ToMeLetter() {
     const birthdayPickerRef = useRef(null);
     const setCsrfToken = async () => {
       try {
-        await axios.get('http://127.0.0.1:8000/sanctum/csrf-cookie');
+        await axios.get('http://localhost:8000/sanctum/csrf-cookie');
       } catch (error) {
         console.error('Error fetching CSRF token:', error);
       }
     };
 
 
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
-      setCsrfToken();
-      console.log({ content, deliveryDate, email }); // Log data being sent
+      if (!email.includes('@')) {
+          alert("Please enter a valid email address.");
+          return;
+      }
+      await setCsrfToken();
       axios.post('/api/dearmeletters', {
-        content,
-        delivery_date: deliveryDate,
-        email
+          content,
+          delivery_date: deliveryDate,
+          email
       }).then(response => {
-        console.log(response.data);
-        alert("All set!")
+          console.log(response.data);
+          alert("All set!");
+
+          // Clear the form fields
+          setContent('');
+          setEmail('');
+          setDeliveryDate('');
+          setSelectedDate(null);
+          setSelectedBirthday(null);
       }).catch(error => {
-        console.error(error);
-        alert("Ooopss! Error occured.")
+          console.error(error);
+          alert("Ooopss! Error occurred.")
       });
-    };
+  };
+
 
     const toggleDateDropdown = () => setDateDropdownOpen(!dateDropdownOpen);
     const toggleBirthdayDropdown = () => setBirthdayDropdownOpen(!birthdayDropdownOpen);
 
+
     const handleDateChange = (value, formattedValue) => {
       setSelectedDate(formattedValue);
-      if (formattedValue){
-        setDeliveryDate(`on ${formattedValue}`);
-      } else{
+      if (formattedValue) {
+        const formattedDate = new Date(formattedValue).toISOString().split('T')[0];
+        setDeliveryDate(formattedDate);
+      } else {
         setDeliveryDate('');
       }
       setDateDropdownOpen(false);
     };
 
     const handleBirthdayChange = (value, formattedValue) => {
-        setSelectedBirthday(formattedValue);
-        // Check if formattedValue is truthy before setting deliveryDate
-        if (formattedValue) {
-          setDeliveryDate(`on birthday (${formattedValue})`);
-        } else {
-          // Set deliveryDate to an empty string or a default message if no date is selected
-          setDeliveryDate('');
-        }
-        setBirthdayDropdownOpen(false);
-      };
+      setSelectedBirthday(formattedValue);
+      if (formattedValue) {
+        const formattedDate = new Date(formattedValue).toISOString().split('T')[0];
+        setDeliveryDate(`on birthday (${formattedDate})`);
+      } else {
+        setDeliveryDate('');
+      }
+      setBirthdayDropdownOpen(false);
+    };
+
 
     useEffect(() => {
       function handleClickOutside(event) {
